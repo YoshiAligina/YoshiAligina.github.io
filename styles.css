@@ -166,7 +166,7 @@ nav ul li a {
 
 .work-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Increased min width */
     gap: 30px;
     margin-top: 40px;
 }
@@ -185,7 +185,7 @@ nav ul li a {
 
 .work-item img {
     width: 100%;
-    height: 250px;
+    height: 400px; /* Increased height */
     object-fit: cover;
 }
 
