@@ -91,7 +91,7 @@ nav ul li a {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background-color: #f0f7ff;
+    background-color: #FFCAD4;
     padding-top: 80px;
 }
 
@@ -151,7 +151,7 @@ nav ul li a {
 }
 
 .skills span {
-    background-color: #FFE5D9;
+    background-color: #333;
     color: #FFCAD4;
     padding: 8px 16px;
     border-radius: 20px;
