@@ -333,3 +333,36 @@ footer {
         font-size: 1.2rem;
     }
 }
+
+.parallax {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#hero.parallax {
+    background-image: url('images/hero-background.jpg'); /* replace with a good parallax-friendly image */
+}
+
+#work.parallax {
+    background-image: url('images/work-background.jpg'); /* replace too */
+}
+
+/* Add slight fade/slide animations */
+.parallax-element {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+}
+
+.parallax-element.active {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+/* Optional: smoother scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
