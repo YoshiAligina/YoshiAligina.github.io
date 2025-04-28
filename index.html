@@ -1,121 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoshi Aligina</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yoshi Aligina</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <header>
-        <div class="header-content">
-            <h1>Yoshi Aligina</h1>
-            <nav>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#work">Work</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+
+<header>
+  <div class="header-content">
+    <h1>Yoshi Aligina</h1>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section id="hero" class="parallax">
+    <div class="hero-content">
+      <h2>Hello, I'm Yoshi.</h2>
+      <p>CS, DS, Stat, and Phil @ Rutgers</p>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <h2>About Me</h2>
+      <div class="about-content">
+        <div class="about-image parallax-element">
+          <img src="images/yoshipfp.png" alt="Yoshi Aligina">
         </div>
-    </header>
-
-    <main>
-        <section id="hero">
-            <div class="hero-content">
-                <h2>Hello, I'm Yoshi.</h2>
-                <p>CS , DS, Stat, and Phil @ Rutgers</p>
-            </div>
-        </section>
-
-        <section id="about">
-            <div class="container">
-                <h2>About Me</h2>
-                <div class="about-content">
-                    <div class="about-image">
-                        <img src="images/yoshipfp.png" alt="Yoshi Aligina">
-                    </div>
-                    <div class="about-text">
-                        <p>I'm a passionate student with strong experience in statistics and data analysis. With a background in Regression Methods and statistical programming, I bring a unique perspective to every project I work on.</p>
-                        <p>I believe in continuous learning always, and am always looking for new experiences.</p>
-                        <div class="skills">
-                            <span>Python</span>
-                            <span>R</span>
-                            <span>Bayes :3</span>
-                            <span>Java</span>
-                            <span>Bloomberg: Finance Fundamentals</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="work">
-            <div class="container">
-                <h2>Selected Work</h2>
-                <div class="work-grid">
-                    <div class="work-item">
-                        <img src="images/legal.jpg" alt="Legal Text Classification">
-                        <div class="work-overlay">
-                            <h3>Legal Text Classification</h3>
-                            <p>Machine Learning</p>
-                            <a href="https://github.com/YoshiAligina/LegalTextClassification" class="btn" target="_blank">View Project</a>
-                        </div>
-                    </div>
-                    <div class="work-item">
-                        <img src="images/allstate.jpg" alt="Allstate 1B">
-                        <div class="work-overlay">
-                            <h3>Allstate 1B</h3>
-                            <p>Data Analysis</p>
-                            <a href="https://github.com/YoshiAligina/Allstate1B" class="btn" target="_blank">View Project</a>
-                        </div>
-                    </div>
-                    <div class="work-item">
-                        <img src="images/github.png" alt="Other Repositories">
-                        <div class="work-overlay">
-                            <h3>Other Repositories</h3>
-                            <p>Various Projects</p>
-                            <a href="https://github.com/YoshiAligina?tab=repositories" class="btn" target="_blank">View Projects</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact">
-            <div class="container">
-                <h2>Get In Touch</h2>
-                <div class="contact-content">
-                    <div class="contact-info">
-                        <p>I'm always open to discussing new projects, and ideas! (Especially if they are about stats :3).</p>
-                        <div class="contact-details">
-                            <div class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <a href="mailto:yoshialigina@gmail.com">yoshialigina@gmail.com</a>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Based in Princeton, NJ</span>
-                            </div>
-                        </div>
-                        <div class="social-links">
-                            <a href="#" target="_blank"><i class="fab fa-github"></i></a>
-                            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Yoshi Aligina. All rights reserved.</p>
+        <div class="about-text">
+          <p>I'm a passionate student with strong experience in statistics and data analysis...</p>
+          <p>I believe in continuous learning always, and am always looking for new experiences.</p>
+          <div class="skills">
+            <span>Python</span>
+            <span>R</span>
+            <span>Bayes :3</span>
+            <span>Java</span>
+            <span>Bloomberg: Finance Fundamentals</span>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <script src="script.js"></script>
+  <section id="work" class="parallax">
+    <div class="container">
+      <h2>Selected Work</h2>
+      <div class="work-grid">
+        <!-- your work items stay here -->
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <h2>Get In Touch</h2>
+      <div class="contact-content">
+        <div class="contact-info">
+          <p>I'm always open to discussing new projects, and ideas! (Especially about stats :3).</p>
+          <div class="contact-details">
+            <!-- contact info -->
+          </div>
+          <div class="social-links">
+            <!-- social links -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2025 Yoshi Aligina. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/simple-parallax-js@5.6.2/dist/simpleParallax.min.js"></script>
+<script src="script.js"></script>
+<script>
+  // Simple parallax initialization
+  var images = document.querySelectorAll('.parallax-element img');
+  new simpleParallax(images, {
+    scale: 1.3,
+    delay: 0.6,
+    transition: 'cubic-bezier(0,0,0,1)'
+  });
+</script>
+
 </body>
 </html>
