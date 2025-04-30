@@ -366,3 +366,27 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Text-only work-item */
+.work-item.text-only {
+    background-color: #FFCAD4; /* Soft pink */
+    padding: 20px;
+    min-height: 200px;
+}
+
+.work-item.text-only img {
+    display: none; /* Hide empty image */
+}
+
+.work-item.text-only .work-overlay {
+    position: static; /* Remove absolute positioning */
+    transform: none; /* Disable slide-in effect */
+    background: none; /* Remove gradient */
+    padding: 0;
+}
+
+.work-item.text-only .work-overlay h3,
+.work-item.text-only .work-overlay p,
+.work-item.text-only .work-overlay a {
+    color: #333; /* Match body text */
+}
+
