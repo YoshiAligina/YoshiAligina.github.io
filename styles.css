@@ -389,4 +389,65 @@ html {
 .work-item.text-only .work-overlay a {
     color: #333; /* Match body text */
 }
+/* Custom Cursor */
+.custom-cursor {
+    position: fixed; 
+    width: 20px;
+    height: 20px;
+    background-color: rgba(157, 129, 137, 0.5); 
+    border-radius: 50%;
+    pointer-events: none; 
+    transform: translate(-50%, -50%); /* Center on mouse */
+    transition: transform 0.1s ease, opacity 0.3s ease; /* Smooth movement */
+    opacity: 0; /* Hidden by default */
+    z-index: 10000; 
+    box-shadow: 0 0 10px rgba(157, 129, 137, 0.8), 0 0 20px rgba(157, 129, 137, 0.4); /* Glow effect */
+}
 
+@keyframes cursorPulse {
+    0% { box-shadow: 0 0 10px rgba(157, 129, 137, 0.8), 0 0 20px rgba(157, 129, 137, 0.4); }
+    50% { box-shadow: 0 0 15px rgba(244, 172, 183, 0.9), 0 0 25px rgba(244, 172, 183, 0.5); } 
+    100% { box-shadow: 0 0 10px rgba(157, 129, 137, 0.8), 0 0 20px rgba(157, 129, 137, 0.4); }
+}
+
+.custom-cursor.active {
+    opacity: 1; 
+    animation: cursorPulse 1.5s infinite; 
+
+
+.hero-text {
+    cursor: none; 
+    transition: transform 0.3s ease, color 0.3s ease;
+    display: inline-block; 
+}
+
+.hero-text:hover {
+    transform: scale(1.05); 
+    color: #F4ACB7; 
+}
+
+
+#hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #FFCAD4;
+    padding-top: 80px;
+}
+
+.hero-content h2 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in;
+}
+
+@media (max-width: 600px) {
+    .hero-text {
+        cursor: default; 
+    }
+    .custom-cursor {
+        display: none; 
+    }
+}
