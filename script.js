@@ -190,3 +190,18 @@ document.addEventListener('DOMContentLoaded', () => {
             errorDiv.style.display = 'block';
         });
 });
+const customCursor = document.querySelector('.custom-cursor');
+const heroText = document.querySelector('.hero-text');
+
+heroText.addEventListener('mouseenter', () => {
+    customCursor.classList.add('active');
+});
+
+heroText.addEventListener('mouseleave', () => {
+    customCursor.classList.remove('active');
+});
+
+heroText.addEventListener('mousemove', (e) => {
+    customCursor.style.left = `${e.clientX}px`;
+    customCursor.style.top = `${e.clientY}px`;
+});
