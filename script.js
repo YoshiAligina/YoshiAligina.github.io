@@ -119,3 +119,74 @@ window.addEventListener('scroll', function() {
         }
     });
 });
+// Fetch GitHub repositories and populate work-grid
+document.addEventListener('DOMContentLoaded', () => {
+    const workGrid = document.getElementById('work-grid');
+    const loadingDiv = document.getElementById('work-loading');
+    const errorDiv = document.getElementById('work-error');
+
+    // Show loading message
+    loadingDiv.style.display = 'block';
+
+    fetch('https://api.github.com/users/YoshiAligina/repos')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(repos => {
+            // Hide loading message
+            loadingDiv.style.display = 'none';
+
+            // Filter out the github.io repository and sort by last updated
+            const filteredRepos = repos
+                .filter(repo => repo.name !== 'YoshiAligina.github.io')
+                .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+            if (filteredRepos.length === 0) {
+                errorDiv.textContent = 'No public projects found.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Create work-item for each repository
+            filteredRepos.forEach(repo => {
+                const workItem = document.createElement('div');
+                workItem.className = 'work-item text-only'; // Use text-only class for simplicity
+
+                // Create overlay content
+                const workOverlay = document.createElement('div');
+                workOverlay.className = 'work-overlay';
+
+                const title = document.createElement('h3');
+                title.textContent = repo.name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); // Capitalize words
+
+                const description = document.createElement('p');
+                description.textContent = repo.description || 'No description available.';
+
+                const link = document.createElement('a');
+                link.href = repo.html_url;
+                link.className = 'btn';
+                link.textContent = 'View on GitHub';
+                link.target = '_blank';
+
+                workOverlay.appendChild(title);
+                workOverlay.appendChild(description);
+                workOverlay.appendChild(link);
+
+                const img = document.createElement('img');
+                img.src = '';
+                img.alt = '';
+
+                workItem.appendChild(img);
+                workItem.appendChild(workOverlay);
+                workGrid.appendChild(workItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching repositories:', error);
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'block';
+        });
+});
