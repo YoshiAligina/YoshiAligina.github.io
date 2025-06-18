@@ -1,0 +1,212 @@
+body {
+  font-family: 'Linux Libertine', 'Georgia', serif;
+  background-color: #f8f9fa;
+  color: #202122;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header {
+  background: #fff;
+  border-bottom: 1px solid #a2a9b1;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+header h1 {
+  font-size: 2rem;
+  color: #3366cc;
+  margin: 0;
+}
+header form input[type="search"] {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #a2a9b1;
+  border-radius: 2px;
+}
+aside {
+  float: left;
+  width: 200px;
+  background: #f8f9fa;
+  border-right: 1px solid #a2a9b1;
+  min-height: 100vh;
+  padding-top: 20px;
+  position: fixed;
+  top: 60px;
+  left: 0;
+}
+aside nav ul {
+  list-style: none;
+  padding: 0;
+}
+aside nav ul li {
+  margin: 10px 0;
+}
+aside nav ul li a {
+  color: #3366cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+main {
+  margin-left: 220px;
+  max-width: 900px;
+  padding: 30px 20px 20px 20px;
+  background: #fff;
+  min-height: 100vh;
+}
+h1, h2 {
+  color: #222;
+  margin-top: 1.2em;
+}
+.infobox {
+  float: right;
+  width: 250px;
+  background: #f8f9fa;
+  border: 1px solid #a2a9b1;
+  padding: 10px;
+  margin: 0 0 20px 20px;
+  font-size: 0.95em;
+}
+.infobox img {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.infobox table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.infobox td {
+  padding: 2px 5px;
+  vertical-align: top;
+}
+ul.skills {
+  list-style: disc inside;
+  padding-left: 0;
+  margin-bottom: 1em;
+}
+ul.skills li {
+  display: inline-block;
+  background: #eaf3ff;
+  color: #3366cc;
+  border-radius: 3px;
+  padding: 3px 8px;
+  margin: 2px 4px;
+  font-size: 0.95em;
+}
+.work-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 2em;
+}
+.work-item {
+  background: #f8f9fa;
+  border: 1px solid #a2a9b1;
+  border-radius: 4px;
+  width: 260px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+.work-item img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+.work-overlay {
+  padding: 10px;
+}
+.work-overlay h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1em;
+}
+.work-overlay p {
+  margin: 0 0 10px 0;
+  font-size: 0.95em;
+}
+.btn {
+  display: inline-block;
+  background: #3366cc;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 3px;
+  text-decoration: none;
+  font-size: 0.95em;
+}
+ul#repo-list {
+  list-style: disc inside;
+  padding-left: 0;
+}
+ul#repo-list li {
+  margin-bottom: 10px;
+}
+a {
+  color: #3366cc;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.contact-content {
+  margin-top: 1em;
+}
+.contact-info {
+  background: #f8f9fa;
+  border: 1px solid #a2a9b1;
+  border-radius: 4px;
+  padding: 15px;
+  max-width: 400px;
+}
+.contact-details {
+  margin: 10px 0;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.contact-item i {
+  margin-right: 8px;
+  color: #3366cc;
+}
+.social-links a {
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: #3366cc;
+}
+footer {
+  background: #f8f9fa;
+  border-top: 1px solid #a2a9b1;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 40px;
+}
+@media (max-width: 900px) {
+  aside {
+    display: none;
+  }
+  main {
+    margin-left: 0;
+    padding: 15px;
+  }
+  .infobox {
+    float: none;
+    margin: 0 auto 20px auto;
+    display: block;
+  }
+  .work-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+}
