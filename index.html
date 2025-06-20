@@ -128,19 +128,40 @@
       margin-right: 10px;
     }
 
+    .work-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 1em;
+    }
+
     .work-item {
       border: 1px solid #a2a9b1;
-      padding: 10px;
-      margin-bottom: 1em;
+      padding: 6px;
+      width: 220px;
+      font-size: 0.8rem;
+      background: #f8f9fa;
     }
 
     .work-item img {
       width: 100%;
-      height: auto;
+      height: 100px;
+      object-fit: cover;
+      margin-bottom: 4px;
     }
 
     .work-overlay h3 {
-      margin: 0.5em 0;
+      font-size: 1rem;
+      margin: 4px 0;
+    }
+
+    .work-overlay p {
+      font-size: 0.8rem;
+      margin: 0 0 6px 0;
+    }
+
+    .work-overlay a {
+      font-size: 0.8rem;
     }
 
     ul#repo-list {
@@ -224,30 +245,32 @@
     </ul>
 
     <h2 id="work">Selected Work</h2>
-    <div class="work-item">
-      <img src="images/legal.jpg" alt="Legal Text Classification" />
-      <div class="work-overlay">
-        <h3>Legal Text Classification</h3>
-        <p>A machine learning project focused on categorizing legal documents.</p>
-        <a href="https://github.com/YoshiAligina/LegalTextClassification" target="_blank">View project</a>
+    <div class="work-grid">
+      <div class="work-item">
+        <img src="images/legal.jpg" alt="Legal Text Classification" />
+        <div class="work-overlay">
+          <h3>Legal Text Classification</h3>
+          <p>ML project on categorizing legal documents.</p>
+          <a href="https://github.com/YoshiAligina/LegalTextClassification" target="_blank">View project</a>
+        </div>
       </div>
-    </div>
 
-    <div class="work-item">
-      <img src="images/allstate.jpg" alt="Allstate 1B" />
-      <div class="work-overlay">
-        <h3>Allstate 1B</h3>
-        <p>Data analysis project for insurance claim modeling.</p>
-        <a href="https://github.com/YoshiAligina/Allstate1B" target="_blank">View project</a>
+      <div class="work-item">
+        <img src="images/allstate.jpg" alt="Allstate 1B" />
+        <div class="work-overlay">
+          <h3>Allstate 1B</h3>
+          <p>Data analysis for insurance pricing.</p>
+          <a href="https://github.com/YoshiAligina/Allstate1B" target="_blank">View project</a>
+        </div>
       </div>
-    </div>
 
-    <div class="work-item">
-      <img src="images/github.png" alt="Other Repositories" />
-      <div class="work-overlay">
-        <h3>Other Repositories</h3>
-        <p>Various coding and data projects.</p>
-        <a href="https://github.com/YoshiAligina?tab=repositories" target="_blank">View on GitHub</a>
+      <div class="work-item">
+        <img src="images/github.png" alt="Other Repositories" />
+        <div class="work-overlay">
+          <h3>Other Repositories</h3>
+          <p>Various public projects.</p>
+          <a href="https://github.com/YoshiAligina?tab=repositories" target="_blank">View on GitHub</a>
+        </div>
       </div>
     </div>
 
@@ -259,7 +282,7 @@
     <h2 id="contact">Contact</h2>
     <div class="contact-content">
       <div class="contact-info">
-        <p>For collaborations, research discussions, or data analysis inquiries, feel free to get in touch.</p>
+        <p>For collaborations or data inquiries, feel free to reach out.</p>
         <p>Email: <a href="mailto:yoshialigina@gmail.com">yoshialigina@gmail.com</a></p>
         <p>Location: Princeton, NJ</p>
         <p>GitHub: <a href="https://github.com/YoshiAligina" target="_blank">YoshiAligina</a></p>
