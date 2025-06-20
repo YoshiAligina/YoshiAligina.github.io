@@ -20,27 +20,35 @@
       background: #f8f9fa;
       border-bottom: 1px solid #a2a9b1;
       padding: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     .header-container {
-      max-width: 1200px;
-      margin: 0 auto;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: auto;
     }
 
     header h1 {
       font-size: 1.8rem;
-      font-weight: normal;
       margin: 0;
-      color: #000;
     }
 
-    header form input[type="search"] {
+    header form input {
       font-size: 1rem;
       padding: 4px 8px;
       border: 1px solid #a2a9b1;
+    }
+
+    #sidebar-toggle {
+      display: none;
+      font-size: 1.2rem;
+      background: none;
+      border: none;
     }
 
     aside {
@@ -49,19 +57,15 @@
       padding: 15px;
       background: #f8f9fa;
       border-right: 1px solid #a2a9b1;
-      height: 100%;
-      position: fixed;
-      top: 60px;
-      left: 0;
     }
 
     aside nav ul {
-      list-style-type: none;
+      list-style: none;
       padding: 0;
     }
 
     aside nav ul li {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     aside nav ul li a {
@@ -76,21 +80,11 @@
     main {
       margin-left: 180px;
       padding: 20px;
-      max-width: 960px;
+      max-width: 900px;
     }
 
-    h1 {
-      font-size: 1.8rem;
-      margin-top: 0.5em;
-      margin-bottom: 0.5em;
-      font-weight: normal;
-    }
-
-    h2 {
-      font-size: 1.2rem;
-      border-bottom: 1px solid #a2a9b1;
-      padding-bottom: 4px;
-      margin-top: 1.4em;
+    h1, h2 {
+      margin-top: 1.2em;
     }
 
     .infobox {
@@ -105,42 +99,30 @@
 
     .infobox img {
       width: 100%;
-      margin-bottom: 8px;
-    }
-
-    .infobox table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .infobox td {
-      padding: 2px 4px;
     }
 
     ul.skills {
       list-style: none;
       padding: 0;
-      margin: 0;
     }
 
     ul.skills li {
-      display: inline;
-      margin-right: 10px;
+      display: inline-block;
+      margin-right: 8px;
     }
 
     .work-grid {
       display: flex;
-      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 1em;
+      gap: 12px;
     }
 
     .work-item {
-      border: 1px solid #a2a9b1;
-      padding: 6px;
       width: 220px;
+      border: 1px solid #a2a9b1;
       font-size: 0.8rem;
       background: #f8f9fa;
+      padding: 6px;
     }
 
     .work-item img {
@@ -157,20 +139,11 @@
 
     .work-overlay p {
       font-size: 0.8rem;
-      margin: 0 0 6px 0;
-    }
-
-    .work-overlay a {
-      font-size: 0.8rem;
     }
 
     ul#repo-list {
       list-style: disc;
       padding-left: 20px;
-    }
-
-    .contact-content {
-      margin-top: 1em;
     }
 
     .contact-info {
@@ -180,22 +153,35 @@
       max-width: 400px;
     }
 
+    .reference {
+      font-size: 0.8em;
+      color: #444;
+      border-top: 1px solid #ccc;
+      padding-top: 1em;
+      margin-top: 2em;
+    }
+
     footer {
       font-size: 0.8em;
       color: #54595d;
       padding: 10px;
       border-top: 1px solid #a2a9b1;
       text-align: center;
-      margin-top: 20px;
     }
 
-    a {
-      color: #0645ad;
-      text-decoration: none;
-    }
+    /* Responsive */
+    @media (max-width: 768px) {
+      aside {
+        display: none;
+      }
 
-    a:hover {
-      text-decoration: underline;
+      main {
+        margin-left: 0;
+      }
+
+      #sidebar-toggle {
+        display: inline;
+      }
     }
   </style>
 </head>
@@ -203,17 +189,19 @@
   <header>
     <div class="header-container">
       <h1>Wikipedia</h1>
-      <form><input type="search" placeholder="Search Wikipedia"/></form>
+      <form><input type="search" placeholder="Search Wikipedia" /></form>
+      <button id="sidebar-toggle">☰</button>
     </div>
   </header>
 
-  <aside>
+  <aside id="sidebar">
     <nav>
       <ul>
         <li><a href="#about">About</a></li>
         <li><a href="#work">Selected Work</a></li>
         <li><a href="#projects">GitHub Projects</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li><a href="#references">References</a></li>
       </ul>
     </nav>
   </aside>
@@ -230,9 +218,8 @@
         <tr><td><strong>GitHub:</strong></td><td><a href="https://github.com/YoshiAligina" target="_blank">YoshiAligina</a></td></tr>
       </table>
     </div>
-
     <p>
-      Yoshi Aligina is a student at Rutgers University with a strong interest in data science and statistics. With experience in machine learning, statistical programming, and regression methods, they are passionate about building interpretable, impactful solutions.
+      Yoshi Aligina is a Rutgers student focused on Data Science and Statistical Analysis. Their projects combine machine learning with statistical inference to solve real-world problems.<sup><a href="#ref1">[1]</a></sup>
     </p>
 
     <h2>Skills</h2>
@@ -241,53 +228,54 @@
       <li>R</li>
       <li>Java</li>
       <li>Bayesian Inference</li>
-      <li>Bloomberg: Finance Fundamentals</li>
+      <li>SQL</li>
     </ul>
 
     <h2 id="work">Selected Work</h2>
     <div class="work-grid">
       <div class="work-item">
-        <img src="images/legal.jpg" alt="Legal Text Classification" />
+        <img src="images/legal.jpg" alt="Legal Text Classification">
         <div class="work-overlay">
           <h3>Legal Text Classification</h3>
-          <p>ML project on categorizing legal documents.</p>
+          <p>NLP classification of legal documents.<sup><a href="#ref2">[2]</a></sup></p>
           <a href="https://github.com/YoshiAligina/LegalTextClassification" target="_blank">View project</a>
         </div>
       </div>
-
       <div class="work-item">
-        <img src="images/allstate.jpg" alt="Allstate 1B" />
+        <img src="images/allstate.jpg" alt="Allstate 1B">
         <div class="work-overlay">
           <h3>Allstate 1B</h3>
-          <p>Data analysis for insurance pricing.</p>
+          <p>Claim pricing prediction using regression models.</p>
           <a href="https://github.com/YoshiAligina/Allstate1B" target="_blank">View project</a>
         </div>
       </div>
-
       <div class="work-item">
-        <img src="images/github.png" alt="Other Repositories" />
+        <img src="images/github.png" alt="Other Projects">
         <div class="work-overlay">
-          <h3>Other Repositories</h3>
-          <p>Various public projects.</p>
-          <a href="https://github.com/YoshiAligina?tab=repositories" target="_blank">View on GitHub</a>
+          <h3>Other Projects</h3>
+          <p>Miscellaneous data and dev work.</p>
+          <a href="https://github.com/YoshiAligina" target="_blank">GitHub</a>
         </div>
       </div>
     </div>
 
     <h2 id="projects">GitHub Projects</h2>
     <ul id="repo-list">
-      <!-- JavaScript will fill this in -->
+      <!-- JavaScript adds recent projects here -->
     </ul>
 
     <h2 id="contact">Contact</h2>
-    <div class="contact-content">
-      <div class="contact-info">
-        <p>For collaborations or data inquiries, feel free to reach out.</p>
-        <p>Email: <a href="mailto:yoshialigina@gmail.com">yoshialigina@gmail.com</a></p>
-        <p>Location: Princeton, NJ</p>
-        <p>GitHub: <a href="https://github.com/YoshiAligina" target="_blank">YoshiAligina</a></p>
-      </div>
+    <div class="contact-info">
+      <p>Email: <a href="mailto:yoshialigina@gmail.com">yoshialigina@gmail.com</a></p>
+      <p>Location: Princeton, NJ</p>
+      <p>GitHub: <a href="https://github.com/YoshiAligina" target="_blank">YoshiAligina</a></p>
     </div>
+
+    <h2 id="references">References</h2>
+    <ol class="reference">
+      <li id="ref1">Project summaries based on Yoshi's academic experience in regression, NLP, and data modeling.</li>
+      <li id="ref2">Legal project: GitHub - <a href="https://github.com/YoshiAligina/LegalTextClassification">LegalTextClassification</a>.</li>
+    </ol>
   </main>
 
   <footer>
@@ -295,8 +283,14 @@
   </footer>
 
   <script>
-    const GITHUB_USERNAME = 'YoshiAligina';
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    sidebarToggle.onclick = () => {
+      sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+    };
 
+    // GitHub Repo Fetch
+    const GITHUB_USERNAME = 'YoshiAligina';
     fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`)
       .then(res => res.json())
       .then(repos => {
