@@ -8,222 +8,264 @@
   <link rel="stylesheet" href="wikipedia.css" />
 </head>
 <body>
-  <header>
-    <div class="header-container">
-      <div class="logo-section">
-        <svg width="24" height="24" viewBox="0 0 24 24" class="wikipedia-logo">
-          <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" fill="#000"/>
-        </svg>
-        <h1>Wikipedia</h1>
-      </div>
-      <form><input type="search" placeholder="Search Wikipedia" /></form>
-      <div class="user-tools">
-        <a href="#" class="user-link">Talk</a>
-        <a href="#" class="user-link">Contributions</a>
-        <a href="#" class="user-link">Create account</a>
-        <a href="#" class="user-link">Log in</a>
-      </div>
-      <button id="sidebar-toggle">☰</button>
-    </div>
-    <div class="page-tools">
-      <div class="page-tools-container">
-        <div class="page-tabs">
-          <a href="#" class="tab active">Article</a>
-          <a href="#" class="tab">Talk</a>
+  <!-- Wikipedia Header -->
+  <header class="wikipedia-header">
+    <div class="header-top">
+      <div class="wikipedia-logo-section">
+        <div class="wikipedia-logo"></div>
+        <div>
+          <a href="#" class="wikipedia-title"><strong>WIKIPEDIA</strong></a>
+          <div style="font-size: 11px; color: #000;">The Free Encyclopedia</div>
         </div>
-        <div class="page-actions">
-          <a href="#" class="action">Read</a>
-          <a href="#" class="action">Edit</a>
-          <a href="#" class="action">View history</a>
-        </div>
+      </div>
+      
+      <div class="search-section">
+        <input type="search" class="search-box" placeholder="Search Wikipedia">
+        <button class="search-button">Search</button>
+      </div>
+      
+      <div class="user-links">
+        <a href="#">Donate</a>
+        <a href="#">Create account</a>
+        <a href="#">Log in</a>
+        <span>⋯</span>
       </div>
     </div>
   </header>
 
-  <aside id="sidebar">
-    <div class="sidebar-section">
-      <h3>Navigation</h3>
-      <nav>
+  <!-- Page Title Area -->
+  <div style="max-width: 1000px; margin: 0 auto; padding: 12px; border-bottom: 1px solid #eaecf0;">
+    <h1 class="page-title">Yoshi Aligina</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+      <div>
+        <span style="font-size: 13px; color: #0645ad;">🌐 240 languages ▼</span>
+      </div>
+      <div style="display: flex; gap: 16px; font-size: 13px;">
+        <span style="color: #222;">Appearance</span>
+        <span style="color: #54595d;">hide</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Tabs -->
+  <div class="page-tabs">
+    <div class="tab-section">
+      <a href="#" class="tab active">Article</a>
+      <a href="#" class="tab">Talk</a>
+    </div>
+    <div style="margin-left: auto; display: flex;">
+      <a href="#" class="tab">Read</a>
+      <a href="#" class="tab">View source</a>
+      <a href="#" class="tab">View history</a>
+      <a href="#" class="tab">Tools ▼</a>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h3>Contents</h3>
         <ul>
-          <li><a href="#about">About</a></li>
-          <li><a href="#early-life">Early Life & Education</a></li>
-          <li><a href="#career">Career</a></li>
-          <li><a href="#work">Selected Work</a></li>
-          <li><a href="#projects">GitHub Projects</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#top">(Top)</a></li>
+          <li><a href="#early-life">Name</a></li>
+          <li><a href="#career">History</a></li>
+          <li><a href="#work">Gameplay</a></li>
+          <li><a href="#projects">Laws</a></li>
+          <li><a href="#contact">Governing bodies</a></li>
+          <li><a href="#references">International competitions</a></li>
+          <li><a href="#references">Domestic competitions</a></li>
+          <li><a href="#references">Variants and casual play</a></li>
+          <li><a href="#references">See also</a></li>
+          <li><a href="#references">Notes</a></li>
           <li><a href="#references">References</a></li>
+          <li><a href="#references">External links</a></li>
         </ul>
-      </nav>
-    </div>
-    <div class="sidebar-section">
-      <h3>Tools</h3>
-      <ul>
-        <li><a href="#">What links here</a></li>
-        <li><a href="#">Related changes</a></li>
-        <li><a href="#">Upload file</a></li>
-        <li><a href="#">Special pages</a></li>
-        <li><a href="#">Permanent link</a></li>
-        <li><a href="#">Page information</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-section">
-      <h3>In other projects</h3>
-      <ul>
-        <li><a href="https://github.com/YoshiAligina" target="_blank">GitHub</a></li>
-        <li><a href="#" target="_blank">LinkedIn</a></li>
-      </ul>
-    </div>
-  </aside>
-
-  <main>
-    <!-- Table of Contents -->
-    <div id="toc" class="toc">
-      <div class="toc-header">
-        <strong>Contents</strong>
-        <button id="toc-toggle" class="toc-toggle">[hide]</button>
       </div>
-      <ol class="toc-list">
-        <li><a href="#about">1 Biography</a></li>
-        <li><a href="#early-life">2 Early life and education</a></li>
-        <li><a href="#career">3 Career</a></li>
-        <li><a href="#work">4 Selected work</a></li>
-        <li><a href="#projects">5 GitHub projects</a></li>
-        <li><a href="#contact">6 Contact information</a></li>
-        <li><a href="#references">7 References</a></li>
-      </ol>
-    </div>
+    </aside>
 
-    <h1 id="about">Yoshi Aligina</h1>
-    <div class="article-metadata">
-      <small>From Wikipedia, the free encyclopedia</small>
-      <div class="disambiguation">
-        (Redirected from <a href="#">Yoshita Aligina</a>)
+    <!-- Main Content -->
+    <main class="content">
+      <div class="page-subtitle">From Wikipedia, the free encyclopedia</div>
+      
+      <div style="font-style: italic; font-size: 13px; margin-bottom: 16px;">
+        "Data Scientist" redirects here. For other uses, see <a href="#">Data Scientist (disambiguation)</a>.
       </div>
-    </div>
 
-    <div class="infobox">
-      <div class="infobox-header">Yoshi Aligina</div>
-      <img src="images/yoshipfp.png" alt="Yoshi Aligina" />
-      <table>
-        <tr><td><strong>Born</strong></td><td>Yoshi Aligina<br><small>Princeton, NJ, United States</small></td></tr>
-        <tr><td><strong>Education</strong></td><td>Rutgers University<br><small>(Computer Science, Data Science, Statistics, Philosophy)</small></td></tr>
-        <tr><td><strong>Occupation</strong></td><td>Data Scientist<br>Software Developer<br>Student</td></tr>
-        <tr><td><strong>Known for</strong></td><td>Machine Learning<br>Statistical Analysis<br>Legal Text Classification</td></tr>
-        <tr><td><strong>Website</strong></td><td><a href="https://github.com/YoshiAligina" target="_blank">GitHub Profile</a></td></tr>
-      </table>
-    </div>
+      <div class="content-body">
+        <div class="article-content">
+          <p class="lead">
+            <strong>Yoshi Aligina</strong>, more commonly known as <strong>Yoshi</strong> or <strong>data scientist</strong>, 
+            is a <a href="#">student</a> played between multiple disciplines of <a href="#">computer science</a> 
+            who exclusively use their expertise to solve complex problems around a rectangular field called a 
+            <a href="#">dataset</a>. The objective of the work is to <a href="#">extract insights</a> more accurately 
+            than the opposing challenges by moving the analysis beyond the problem space into a 
+            rectangular-framed <a href="#">solution</a> defended by rigorous methodology. Traditionally, 
+            the work has been conducted over multiple semesters, for a total study time of 4 years. 
+            With an estimated focus on machine learning active in over 5 programming languages and territories, 
+            it is Princeton's most popular student.
+          </p>
 
-    <p class="lead">
-      <strong>Yoshi Aligina</strong> is an American data scientist and software developer currently studying at Rutgers University. Known for combining machine learning techniques with statistical inference to solve complex real-world problems, particularly in the areas of legal text classification and predictive modeling.<sup><a href="#ref1">[1]</a></sup>
-    </p>
+          <p>
+            Data science is practiced in accordance with the <a href="#">Laws of Statistics</a>, 
+            a set of rules that has been in effect since rigorous analysis and is overseen by the 
+            <a href="#">Academic Standards Board</a> (ASB). The game is played on a computer with a 
+            rectangular field called a development environment. Two teams of analysis compete to 
+            get the insights into the opposing team's understanding.
+          </p>
 
-    <p>
-      Aligina's work focuses on the intersection of computer science, data science, and statistical analysis, with notable contributions to natural language processing and regression modeling projects. Their academic background spans multiple disciplines including computer science, data science, statistics, and philosophy.<sup><a href="#ref2">[2]</a></sup>
-    </p>
+          <h2 id="early-life">Early life and education</h2>
+          <p>
+            Yoshi Aligina is currently pursuing studies at <a href="#">Rutgers University</a>, 
+            focusing on a multidisciplinary approach that combines Computer Science, Data Science, 
+            Statistics, and Philosophy. This unique educational background provides a comprehensive 
+            foundation for their work in machine learning and statistical analysis.
+          </p>
 
-    <h2 id="early-life">Early life and education</h2>
-    <p>
-      Yoshi Aligina is currently pursuing studies at Rutgers University, focusing on a multidisciplinary approach that combines Computer Science, Data Science, Statistics, and Philosophy. This unique educational background provides a comprehensive foundation for their work in machine learning and statistical analysis.
-    </p>
+          <h2 id="career">Career</h2>
+          <p>
+            Based in <a href="#">Princeton, New Jersey</a>, Aligina has developed expertise in 
+            <a href="#">Python</a>, <a href="#">R</a>, <a href="#">Java</a>, <a href="#">Bayesian Inference</a>, 
+            and <a href="#">SQL</a>. Their career focus centers on applying advanced statistical methods 
+            and machine learning algorithms to practical applications, particularly in legal document 
+            analysis and insurance claim prediction.
+          </p>
 
-    <h2 id="career">Career</h2>
-    <p>
-      Based in Princeton, New Jersey, Aligina has developed expertise in Python, R, Java, Bayesian Inference, and SQL. Their career focus centers on applying advanced statistical methods and machine learning algorithms to practical applications, particularly in legal document analysis and insurance claim prediction.
-    </p>
+          <h2 id="work">Selected work</h2>
+          <p>Aligina's portfolio demonstrates a range of applications across different domains:</p>
+          
+          <div class="work-grid">
+            <div class="work-item">
+              <img src="images/legal.jpg" alt="Legal Text Classification">
+              <div class="work-item-content">
+                <h3>Legal Text Classification</h3>
+                <p>A natural language processing project focused on automated classification of legal documents.<sup><a href="#ref1">[1]</a></sup></p>
+                <p><strong>Technologies:</strong> Python, NLP, Machine Learning</p>
+                <p><a href="https://github.com/YoshiAligina/LegalTextClassification" target="_blank" class="external">View project</a></p>
+              </div>
+            </div>
+            
+            <div class="work-item">
+              <img src="images/allstate.jpg" alt="Allstate Insurance">
+              <div class="work-item-content">
+                <h3>Allstate Claim Prediction</h3>
+                <p>Comprehensive analysis and prediction model for insurance claim pricing using advanced regression techniques.</p>
+                <p><strong>Technologies:</strong> R, Statistical Modeling</p>
+                <p><a href="https://github.com/YoshiAligina/Allstate1B" target="_blank" class="external">View project</a></p>
+              </div>
+            </div>
+          </div>
 
-    <h2>Skills</h2>
-    <div class="skills-section">
-      <p>Aligina possesses expertise in multiple programming languages and analytical methodologies:</p>
-      <ul class="skills">
-        <li><strong>Python</strong> - Primary language for data analysis and machine learning</li>
-        <li><strong>R</strong> - Statistical computing and graphics</li>
-        <li><strong>Java</strong> - Object-oriented programming and enterprise applications</li>
-        <li><strong>Bayesian Inference</strong> - Statistical methodology for uncertainty quantification</li>
-        <li><strong>SQL</strong> - Database management and querying</li>
-      </ul>
-    </div>
+          <h2 id="projects">GitHub projects</h2>
+          <p>The following repositories represent Aligina's most recent contributions:</p>
+          <ul id="repo-list" class="repo-list">
+            <!-- JavaScript will populate this -->
+          </ul>
 
-    <h2 id="work">Selected work</h2>
-    <p>Aligina's portfolio demonstrates a range of applications across different domains:</p>
-    <div class="work-grid">
-      <div class="work-item">
-        <img src="images/legal.jpg" alt="Legal Text Classification">
-        <div class="work-overlay">
-          <h3>Legal Text Classification</h3>
-          <p>A natural language processing project focused on the automated classification of legal documents using machine learning techniques. The project demonstrates advanced NLP methodologies applied to the legal domain.<sup><a href="#ref3">[3]</a></sup></p>
-          <p><strong>Technologies:</strong> Python, NLP, Machine Learning</p>
-          <a href="https://github.com/YoshiAligina/LegalTextClassification" target="_blank" class="external-link">View project →</a>
+          <h2 id="contact">Contact information</h2>
+          <div style="background: #f8f9fa; border: 1px solid #a2a9b1; padding: 12px; margin: 16px 0;">
+            <p><strong>Email:</strong> <a href="mailto:yoshialigina@gmail.com">yoshialigina@gmail.com</a></p>
+            <p><strong>Location:</strong> Princeton, New Jersey, United States</p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/YoshiAligina" target="_blank" class="external">YoshiAligina</a></p>
+            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/yoshitaaligina/" target="_blank" class="external">yoshitaaligina</a></p>
+            <p><strong>University:</strong> Rutgers University</p>
+          </div>
+
+          <div class="references">
+            <h2 id="references">References</h2>
+            <ol>
+              <li id="ref1">GitHub Repository: <a href="https://github.com/YoshiAligina/LegalTextClassification" target="_blank" class="external">LegalTextClassification</a>. Retrieved August 4, 2025.</li>
+              <li id="ref2">Academic portfolio based on coursework at Rutgers University.</li>
+              <li id="ref3">GitHub Repository: <a href="https://github.com/YoshiAligina/Allstate1B" target="_blank" class="external">Allstate1B</a>. Retrieved August 4, 2025.</li>
+            </ol>
+          </div>
+
+          <div class="categories">
+            <strong>Categories:</strong>
+            <a href="#">American computer scientists</a> |
+            <a href="#">Data scientists</a> |
+            <a href="#">Rutgers University students</a> |
+            <a href="#">Machine learning researchers</a> |
+            <a href="#">People from Princeton, New Jersey</a>
+          </div>
+        </div>
+
+        <!-- Infobox -->
+        <div class="infobox">
+          <div class="infobox-title">Yoshi Aligina</div>
+          <img src="images/yoshipfp.png" alt="Yoshi Aligina" style="border-bottom: 1px solid #a2a9b1;">
+          <div style="text-align: center; font-size: 11px; padding: 4px; color: #222;">
+            The student (#16) attempts to solve the problem behind the opposing team's 
+            <a href="#">understanding</a> (here wearing red and yellow) to 
+            score a <a href="#">solution</a>.
+          </div>
+          <div class="infobox-content">
+            <table>
+              <tr>
+                <td><strong>Highest<br>governing body</strong></td>
+                <td><a href="#">Rutgers University</a></td>
+              </tr>
+              <tr>
+                <td><strong>Nicknames</strong></td>
+                <td>Data Scientist, ML Engineer, The Beautiful Mind</td>
+              </tr>
+              <tr>
+                <td><strong>First played</strong></td>
+                <td>2020s, New Jersey, United States</td>
+              </tr>
+              <tr>
+                <td><strong>Characteristics</strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Contact</strong></td>
+                <td>Limited</td>
+              </tr>
+              <tr>
+                <td><strong>Team members</strong></td>
+                <td>Individual contributor with collaboration</td>
+              </tr>
+              <tr>
+                <td><strong>Mixed-sex</strong></td>
+                <td>Yes, separate competitions</td>
+              </tr>
+              <tr>
+                <td><strong>Type</strong></td>
+                <td>Technical, analytical</td>
+              </tr>
+              <tr>
+                <td><strong>Equipment</strong></td>
+                <td>Computer, datasets, algorithms</td>
+              </tr>
+              <tr>
+                <td><strong>Venue</strong></td>
+                <td>Development environment (typically remote)</td>
+              </tr>
+              <tr>
+                <td><strong>Glossary</strong></td>
+                <td><a href="#">Glossary of data science</a></td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
-      <div class="work-item">
-        <img src="images/allstate.jpg" alt="Allstate 1B">
-        <div class="work-overlay">
-          <h3>Allstate Claim Prediction</h3>
-          <p>A comprehensive analysis and prediction model for insurance claim pricing using advanced regression techniques. The project showcases statistical modeling applied to real-world insurance data.</p>
-          <p><strong>Technologies:</strong> R, Regression Analysis, Statistical Modeling</p>
-          <a href="https://github.com/YoshiAligina/Allstate1B" target="_blank" class="external-link">View project →</a>
-        </div>
-      </div>
-      <div class="work-item">
-        <img src="images/github.png" alt="Other Projects">
-        <div class="work-overlay">
-          <h3>Additional Projects</h3>
-          <p>A collection of various data science and software development projects demonstrating expertise across multiple domains and technologies.</p>
-          <p><strong>Technologies:</strong> Various</p>
-          <a href="https://github.com/YoshiAligina" target="_blank" class="external-link">View GitHub →</a>
-        </div>
-      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="wikipedia-footer">
+    <div class="footer-links">
+      <a href="#">Privacy policy</a> |
+      <a href="#">About Wikipedia</a> |
+      <a href="#">Disclaimers</a> |
+      <a href="#">Contact Wikipedia</a> |
+      <a href="#">Code of Conduct</a> |
+      <a href="#">Mobile view</a>
     </div>
-
-    <h2 id="projects">GitHub projects</h2>
-    <p>The following repositories represent Aligina's most recent and notable contributions to open source software:</p>
-    <ul id="repo-list">
-      <!-- JavaScript adds recent projects here -->
-    </ul>
-
-    <h2 id="contact">Contact information</h2>
-    <div class="contact-info">
-      <p><strong>Email:</strong> <a href="mailto:yoshialigina@gmail.com">yoshialigina@gmail.com</a></p>
-      <p><strong>Location:</strong> Princeton, New Jersey, United States</p>
-      <p><strong>GitHub:</strong> <a href="https://github.com/YoshiAligina" target="_blank" class="external-link">YoshiAligina</a></p>
-      <p><strong>University:</strong> Rutgers University</p>
-    </div>
-
-    <h2 id="references">References</h2>
-    <div class="references">
-      <ol class="reference">
-        <li id="ref1">Academic portfolio and project summaries based on coursework in computer science, data science, statistics, and philosophy at Rutgers University.</li>
-        <li id="ref2">Educational background information from Rutgers University academic records and course listings.</li>
-        <li id="ref3">GitHub Repository: <a href="https://github.com/YoshiAligina/LegalTextClassification" target="_blank" class="external-link">LegalTextClassification</a>. Retrieved August 4, 2025.</li>
-        <li id="ref4">GitHub Repository: <a href="https://github.com/YoshiAligina/Allstate1B" target="_blank" class="external-link">Allstate1B</a>. Retrieved August 4, 2025.</li>
-      </ol>
-    </div>
-
-    <!-- Categories section -->
-    <div class="categories">
-      <strong>Categories:</strong>
-      <a href="#">American computer scientists</a> |
-      <a href="#">Data scientists</a> |
-      <a href="#">Rutgers University alumni</a> |
-      <a href="#">Machine learning researchers</a> |
-      <a href="#">People from Princeton, New Jersey</a>
-    </div>
-  </main>
-
-  <footer>
-    <div class="footer-content">
-      <div class="footer-links">
-        <a href="#">Privacy policy</a> |
-        <a href="#">About Wikipedia</a> |
-        <a href="#">Disclaimers</a> |
-        <a href="#">Contact Wikipedia</a> |
-        <a href="#">Code of Conduct</a> |
-        <a href="#">Mobile view</a>
-      </div>
-      <div class="footer-info">
-        <p>Content is available under <a href="#">CC BY-SA 3.0</a> unless otherwise noted.</p>
-        <p>Privacy policy | About Wikipedia | Disclaimers | Contact Wikipedia | Code of Conduct | Mobile view</p>
-      </div>
+    <div>
+      <p>Content is available under <a href="#">CC BY-SA 4.0</a> unless otherwise noted.</p>
+      <p>Privacy policy | About Wikipedia | Disclaimers | Contact Wikipedia | Code of Conduct | Mobile view</p>
     </div>
   </footer>
 
