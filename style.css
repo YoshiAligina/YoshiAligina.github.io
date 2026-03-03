@@ -31,7 +31,7 @@ body {
 }
 
 .intro-header h1 {
-    font-size: clamp(2.2rem, 3vw, 3.35rem);
+    font-size: clamp(1.9rem, 2.5vw, 2.9rem);
     line-height: 0.95;
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -42,13 +42,13 @@ body {
 .caption {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: clamp(1.65rem, 2vw, 2.05rem);
+    font-size: clamp(1.3rem, 1.6vw, 1.7rem);
     color: var(--muted);
 }
 
 .photo-wrap {
     margin-top: 10px;
-    width: min(98%, 640px);
+    width: min(88%, 320px);
     border: 1px solid #c3c1be;
     box-shadow: var(--soft-shadow);
 }
@@ -65,7 +65,7 @@ body {
 
 .statement {
     margin-top: 22px;
-    font-size: clamp(2.1rem, 3.3vw, 4.1rem);
+    font-size: clamp(1.65rem, 2.5vw, 2.95rem);
     font-weight: 500;
     letter-spacing: -0.04em;
     line-height: 1.04;
@@ -82,12 +82,12 @@ body {
 
 .stamp-collage {
     position: relative;
-    min-height: 890px;
+    min-height: 960px;
 }
 
 .stamp {
     position: absolute;
-    width: 196px;
+    width: 214px;
     filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.22));
     transition: transform 220ms ease, filter 220ms ease;
     transform-origin: center center;
@@ -102,66 +102,66 @@ body {
 }
 
 .stamp-1 {
-    top: 32px;
-    left: 5%;
-    width: 225px;
-    transform: rotate(-1.9deg);
+    top: 24px;
+    left: 2%;
+    width: 248px;
+    transform: rotate(-4.2deg);
 }
 
 .stamp-2 {
-    top: 40px;
-    left: 33%;
-    width: 170px;
-    transform: rotate(-1.3deg);
+    top: 52px;
+    left: 30%;
+    width: 188px;
+    transform: rotate(2.4deg);
 }
 
 .stamp-3 {
-    top: 16px;
-    left: 58%;
-    width: 208px;
-    transform: rotate(-1.1deg);
+    top: 8px;
+    left: 55%;
+    width: 230px;
+    transform: rotate(-2.8deg);
 }
 
 .stamp-4 {
-    top: 18px;
-    right: 1%;
-    width: 246px;
-    transform: rotate(0.8deg);
+    top: 34px;
+    right: -1%;
+    width: 272px;
+    transform: rotate(3.6deg);
 }
 
 .stamp-5 {
-    top: 274px;
-    left: 8%;
-    width: 188px;
-    transform: rotate(0.4deg);
+    top: 302px;
+    left: 6%;
+    width: 208px;
+    transform: rotate(-2.1deg);
 }
 
 .stamp-6 {
-    top: 248px;
-    left: 31%;
-    width: 253px;
-    transform: rotate(-0.7deg);
+    top: 270px;
+    left: 27%;
+    width: 280px;
+    transform: rotate(1.3deg);
 }
 
 .stamp-7 {
-    top: 260px;
-    left: 59%;
-    width: 174px;
-    transform: rotate(-0.8deg);
+    top: 314px;
+    left: 58%;
+    width: 192px;
+    transform: rotate(-3.1deg);
 }
 
 .stamp-8 {
-    top: 520px;
-    left: 56%;
-    width: 194px;
-    transform: rotate(0.5deg);
+    top: 572px;
+    left: 55%;
+    width: 215px;
+    transform: rotate(2.8deg);
 }
 
 .stamp-9 {
-    top: 372px;
-    right: 6%;
-    width: 214px;
-    transform: rotate(-0.3deg);
+    top: 420px;
+    right: 3%;
+    width: 236px;
+    transform: rotate(-1.7deg);
 }
 
 @media (max-width: 1280px) {
@@ -170,11 +170,11 @@ body {
     }
 
     .stamp-collage {
-        min-height: 960px;
+        min-height: 1040px;
     }
 
     .statement {
-        font-size: clamp(2rem, 3.8vw, 3.1rem);
+        font-size: clamp(1.55rem, 3.1vw, 2.4rem);
     }
 }
 
@@ -185,44 +185,44 @@ body {
 
     .intro-header p,
     .caption {
-        font-size: 1.8rem;
+        font-size: 1.35rem;
     }
 
     .statement {
         margin-top: 18px;
-        font-size: clamp(1.8rem, 8.6vw, 2.85rem);
+        font-size: clamp(1.4rem, 6.9vw, 2.2rem);
     }
 
     .stamp-collage {
-        min-height: 760px;
+        min-height: 840px;
     }
 
     .stamp {
-        width: 145px;
+        width: 160px;
     }
 
     .stamp-1 {
-        width: 175px;
+        width: 194px;
         left: 0;
     }
 
     .stamp-2 {
-        width: 130px;
+        width: 144px;
         left: 34%;
     }
 
     .stamp-3 {
-        width: 154px;
+        width: 170px;
         left: 58%;
     }
 
     .stamp-4 {
-        width: 182px;
+        width: 202px;
         right: -4px;
     }
 
     .stamp-6 {
-        width: 198px;
+        width: 220px;
     }
 
     .stamp-8,
