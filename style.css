@@ -82,7 +82,7 @@ body {
 
 .stamp-collage {
     position: relative;
-    min-height: 960px;
+    min-height: 980px;
 }
 
 .stamp {
@@ -96,72 +96,72 @@ body {
 
 .stamp:hover,
 .stamp.stamp-active {
-    transform: scale(1.08) rotate(2deg);
+    transform: scale(1.06) rotate(0.6deg);
     filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.34));
     z-index: 10;
 }
 
 .stamp-1 {
-    top: 24px;
-    left: 2%;
+    top: 28px;
+    left: 4%;
     width: 248px;
-    transform: rotate(-4.2deg);
+    transform: rotate(-0.8deg);
 }
 
 .stamp-2 {
-    top: 52px;
-    left: 30%;
+    top: 26px;
+    left: 28%;
     width: 188px;
-    transform: rotate(2.4deg);
+    transform: rotate(0.6deg);
 }
 
 .stamp-3 {
-    top: 8px;
-    left: 55%;
+    top: 24px;
+    left: 50%;
     width: 230px;
-    transform: rotate(-2.8deg);
+    transform: rotate(-0.5deg);
 }
 
 .stamp-4 {
-    top: 34px;
-    right: -1%;
+    top: 30px;
+    right: 2%;
     width: 272px;
-    transform: rotate(3.6deg);
+    transform: rotate(0.7deg);
 }
 
 .stamp-5 {
-    top: 302px;
+    top: 320px;
     left: 6%;
     width: 208px;
-    transform: rotate(-2.1deg);
+    transform: rotate(-0.6deg);
 }
 
 .stamp-6 {
-    top: 270px;
-    left: 27%;
+    top: 308px;
+    left: 28%;
     width: 280px;
-    transform: rotate(1.3deg);
+    transform: rotate(0.4deg);
 }
 
 .stamp-7 {
-    top: 314px;
+    top: 312px;
     left: 58%;
     width: 192px;
-    transform: rotate(-3.1deg);
+    transform: rotate(-0.7deg);
 }
 
 .stamp-8 {
-    top: 572px;
-    left: 55%;
+    top: 606px;
+    left: 52%;
     width: 215px;
-    transform: rotate(2.8deg);
+    transform: rotate(0.5deg);
 }
 
 .stamp-9 {
-    top: 420px;
-    right: 3%;
+    top: 318px;
+    right: 4%;
     width: 236px;
-    transform: rotate(-1.7deg);
+    transform: rotate(-0.4deg);
 }
 
 @media (max-width: 1280px) {
