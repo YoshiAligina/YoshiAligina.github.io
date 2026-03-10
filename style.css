@@ -85,6 +85,43 @@ body {
     min-height: 980px;
 }
 
+.stamp-link {
+    position: absolute;
+    display: block;
+    text-decoration: none;
+}
+
+.stamp-link .stamp {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: auto;
+    width: 100%;
+}
+
+.stamp-hover-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: var(--ink);
+    background: rgba(232, 231, 229, 0.78);
+    opacity: 0;
+    transition: opacity 220ms ease;
+    pointer-events: none;
+}
+
+.stamp-link:hover .stamp-hover-label,
+.stamp-link:focus-visible .stamp-hover-label {
+    opacity: 1;
+}
+
 .stamp {
     position: absolute;
     width: 214px;
@@ -157,10 +194,13 @@ body {
     transform: rotate(0.5deg);
 }
 
-.stamp-9 {
+.stamp-9-link {
     top: 318px;
     right: 4%;
     width: 236px;
+}
+
+.stamp-9 {
     transform: rotate(-0.4deg);
 }
 
@@ -226,7 +266,11 @@ body {
     }
 
     .stamp-8,
-    .stamp-9 {
+    .stamp-9-link {
         top: 470px;
+    }
+
+    .stamp-9-link {
+        width: 176px;
     }
 }
