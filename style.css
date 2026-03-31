@@ -87,12 +87,14 @@ body {
 
 .stamp-link {
     position: absolute;
-    display: block;
+    display: inline-block;
+    line-height: 0;
     text-decoration: none;
 }
 
 .stamp-link .stamp {
     position: relative;
+    display: block;
     top: 0;
     left: 0;
     right: auto;
@@ -115,11 +117,17 @@ body {
     opacity: 0;
     transition: opacity 220ms ease;
     pointer-events: none;
+    z-index: 2;
 }
 
 .stamp-link:hover .stamp-hover-label,
 .stamp-link:focus-visible .stamp-hover-label {
     opacity: 1;
+}
+
+.stamp-link:hover,
+.stamp-link:focus-visible {
+    z-index: 12;
 }
 
 .stamp {
