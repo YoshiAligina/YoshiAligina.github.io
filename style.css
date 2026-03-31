@@ -104,19 +104,23 @@ body {
 
 .stamp-hover-label {
     position: absolute;
-    inset: 0;
+    top: 50%;
+    left: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'DM Sans', sans-serif;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.15rem;
     letter-spacing: 0.06em;
     text-transform: lowercase;
     color: var(--ink);
-    background: rgba(232, 231, 229, 0.78);
+    background: rgba(232, 231, 229, 0.9);
+    padding: 0.35rem 0.7rem;
+    border-radius: 4px;
+    transform: translate(-50%, -50%) scale(0.96);
     opacity: 0;
-    transition: opacity 220ms ease;
+    transition: opacity 220ms ease, transform 220ms ease;
     pointer-events: none;
     z-index: 2;
 }
@@ -124,6 +128,7 @@ body {
 .stamp-link:hover .stamp-hover-label,
 .stamp-link:focus-visible .stamp-hover-label {
     opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .stamp-link:hover,
