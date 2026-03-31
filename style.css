@@ -217,9 +217,14 @@ body {
     top: 318px;
     right: 4%;
     width: 236px;
+    aspect-ratio: 515 / 764;
+    overflow: hidden;
 }
 
 .stamp-9 {
+    height: 100%;
+    object-fit: cover;
+    object-position: center 52%;
     transform: rotate(-0.4deg);
 }
 
