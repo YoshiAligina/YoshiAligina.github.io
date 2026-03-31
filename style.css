@@ -206,10 +206,13 @@ body {
     transform: rotate(-0.7deg);
 }
 
-.stamp-8 {
+.stamp-8-link {
     top: 606px;
     left: 52%;
     width: 215px;
+}
+
+.stamp-8 {
     transform: rotate(0.5deg);
 }
 
@@ -289,9 +292,13 @@ body {
         width: 220px;
     }
 
-    .stamp-8,
+    .stamp-8-link,
     .stamp-9-link {
         top: 470px;
+    }
+
+    .stamp-8-link {
+        width: 160px;
     }
 
     .stamp-9-link {
