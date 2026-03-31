@@ -99,6 +99,7 @@ body {
     left: 0;
     right: auto;
     width: 100%;
+    z-index: 1;
 }
 
 .stamp-hover-label {
@@ -128,6 +129,11 @@ body {
 .stamp-link:hover,
 .stamp-link:focus-visible {
     z-index: 12;
+}
+
+.stamp-link .stamp:hover,
+.stamp-link .stamp.stamp-active {
+    z-index: 1;
 }
 
 .stamp {
