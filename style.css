@@ -90,6 +90,8 @@ body {
     display: inline-block;
     line-height: 0;
     text-decoration: none;
+    translate: 0 0;
+    will-change: translate;
 }
 
 .stamp-link .stamp {
@@ -141,69 +143,91 @@ body {
     z-index: 1;
 }
 
+/* ─── Stamps: individual transform properties ─── */
 .stamp {
     position: absolute;
     width: 214px;
     filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.22));
-    transition: transform 220ms ease, filter 220ms ease;
+    transition: scale 220ms ease, filter 220ms ease;
     transform-origin: center center;
-    cursor: pointer;
+    cursor: grab;
+    translate: 0 0;
+    scale: 1;
+    will-change: translate, rotate;
 }
 
 .stamp:hover,
 .stamp.stamp-active {
-    transform: scale(1.06) rotate(0.6deg);
+    scale: 1.06;
     filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.34));
     z-index: 10;
 }
 
+/* ─── Drag state ─── */
+.stamp-grabbed,
+.stamp-grabbed .stamp {
+    cursor: grabbing !important;
+}
+
+.stamp.stamp-grabbed {
+    filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32));
+    scale: 1.04;
+    z-index: 20;
+}
+
+.stamp-grabbed .stamp {
+    filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32));
+    scale: 1.04;
+}
+
+/* ─── Stamp positions (using individual rotate) ─── */
 .stamp-1 {
     top: 28px;
     left: 4%;
     width: 248px;
-    transform: rotate(-0.8deg);
+    rotate: -0.8deg;
 }
 
 .stamp-2 {
     top: 26px;
     left: 28%;
     width: 188px;
-    transform: rotate(0.6deg);
+    rotate: 0.6deg;
 }
 
 .stamp-3 {
     top: 24px;
     left: 50%;
     width: 230px;
-    transform: rotate(-0.5deg);
+    rotate: -0.5deg;
 }
 
 .stamp-4 {
     top: 30px;
     right: 2%;
     width: 272px;
-    transform: rotate(0.7deg);
+    rotate: 0.7deg;
 }
 
 .stamp-5 {
     top: 320px;
     left: 6%;
     width: 208px;
-    transform: rotate(-0.6deg);
+    rotate: -0.6deg;
 }
 
 .stamp-6 {
     top: 308px;
     left: 28%;
     width: 280px;
-    transform: rotate(0.4deg);
+    rotate: 0.4deg;
 }
 
 .stamp-7 {
     top: 312px;
     left: 58%;
     width: 192px;
-    transform: rotate(-0.7deg);
+    rotate: -0.7deg;
 }
 
 .stamp-8-link {
@@ -213,7 +237,7 @@ body {
 }
 
 .stamp-8 {
-    transform: rotate(0.5deg);
+    rotate: 0.5deg;
 }
 
 .stamp-9-link {
@@ -228,9 +252,77 @@ body {
     height: 100%;
     object-fit: cover;
     object-position: center 52%;
-    transform: rotate(-0.4deg);
+    rotate: -0.4deg;
 }
 
+/* ─── Kinetic text: letter animation ─── */
+.letter {
+    display: inline-block;
+    opacity: 0;
+    translate: 0 10px;
+    animation: letterIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--i) * 55ms);
+}
+
+@keyframes letterIn {
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+/* ─── Text fade-in ─── */
+.text-fade {
+    opacity: 0;
+    translate: 0 6px;
+    animation: fadeSlideIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--delay, 0ms);
+}
+
+@keyframes fadeSlideIn {
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+/* ─── Accent shimmer on hover ─── */
+.accent-shimmer {
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.accent-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: -2px -5px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(194, 127, 129, 0.18) 40%,
+        rgba(194, 127, 129, 0.25) 50%,
+        rgba(194, 127, 129, 0.18) 60%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.accent-shimmer:hover::after {
+    opacity: 1;
+    animation: shimmer 1.8s ease infinite;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ─── Responsive ─── */
 @media (max-width: 1280px) {
     .layout {
         grid-template-columns: 1fr;
