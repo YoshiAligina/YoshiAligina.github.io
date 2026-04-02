@@ -85,6 +85,7 @@ body {
     min-height: 980px;
 }
 
+/* ─── Link stamps ─── */
 .stamp-link {
     position: absolute;
     display: inline-block;
@@ -104,33 +105,33 @@ body {
     z-index: 1;
 }
 
+/* ─── Cleaner link hover label ─── */
 .stamp-hover-label {
     position: absolute;
-    top: 50%;
+    bottom: -6px;
     left: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 1.15rem;
-    letter-spacing: 0.06em;
-    text-transform: lowercase;
-    color: var(--ink);
-    background: rgba(232, 231, 229, 0.9);
-    padding: 0.35rem 0.7rem;
-    border-radius: 4px;
-    transform: translate(-50%, -50%) scale(0.96);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    padding: 0;
     opacity: 0;
-    transition: opacity 220ms ease, transform 220ms ease;
+    transform: translateX(-50%) translateY(4px);
+    transition: opacity 320ms ease, transform 320ms ease;
     pointer-events: none;
     z-index: 2;
+    white-space: nowrap;
 }
 
 .stamp-link:hover .stamp-hover-label,
 .stamp-link:focus-visible .stamp-hover-label {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateX(-50%) translateY(0);
 }
 
 .stamp-link:hover,
@@ -286,6 +287,13 @@ body {
     }
 }
 
+/* ─── Word spans for dynamic text displacement ─── */
+.word {
+    display: inline-block;
+    transition: translate 0.15s ease-out;
+    will-change: translate;
+}
+
 /* ─── Accent shimmer on hover ─── */
 .accent-shimmer {
     position: relative;
@@ -323,9 +331,12 @@ body {
 }
 
 /* ─── Responsive ─── */
+
+/* Tablet */
 @media (max-width: 1280px) {
     .layout {
         grid-template-columns: 1fr;
+        padding: 24px 24px 20px;
     }
 
     .stamp-collage {
@@ -335,8 +346,34 @@ body {
     .statement {
         font-size: clamp(1.55rem, 3.1vw, 2.4rem);
     }
+
+    .photo-wrap {
+        width: min(70%, 300px);
+    }
 }
 
+/* Small tablet / large phone */
+@media (max-width: 900px) {
+    .stamp-collage {
+        min-height: 900px;
+    }
+
+    .stamp {
+        width: 180px;
+    }
+
+    .stamp-1 { width: 210px; }
+    .stamp-2 { width: 158px; }
+    .stamp-3 { width: 195px; }
+    .stamp-4 { width: 230px; }
+    .stamp-5 { width: 175px; }
+    .stamp-6 { width: 235px; }
+    .stamp-7 { width: 165px; }
+    .stamp-8-link { width: 180px; }
+    .stamp-9-link { width: 200px; }
+}
+
+/* Phone */
 @media (max-width: 760px) {
     .layout {
         padding: 20px 16px 24px;
@@ -350,6 +387,10 @@ body {
     .statement {
         margin-top: 18px;
         font-size: clamp(1.4rem, 6.9vw, 2.2rem);
+    }
+
+    .photo-wrap {
+        width: min(80%, 280px);
     }
 
     .stamp-collage {
@@ -396,4 +437,51 @@ body {
     .stamp-9-link {
         width: 176px;
     }
+
+    .stamp-hover-label {
+        font-size: 0.85rem;
+    }
+}
+
+/* Small phone */
+@media (max-width: 480px) {
+    .layout {
+        padding: 16px 12px 20px;
+    }
+
+    .intro-header h1 {
+        font-size: 1.7rem;
+    }
+
+    .statement {
+        font-size: clamp(1.2rem, 6vw, 1.8rem);
+    }
+
+    .photo-wrap {
+        width: min(90%, 250px);
+    }
+
+    .stamp-collage {
+        min-height: 700px;
+    }
+
+    .stamp {
+        width: 130px;
+    }
+
+    .stamp-1 { width: 160px; }
+    .stamp-2 { width: 120px; left: 30%; }
+    .stamp-3 { width: 140px; left: 55%; }
+    .stamp-4 { width: 165px; }
+    .stamp-5 { top: 260px; width: 140px; }
+    .stamp-6 { top: 250px; width: 180px; }
+    .stamp-7 { top: 255px; width: 130px; }
+
+    .stamp-8-link,
+    .stamp-9-link {
+        top: 400px;
+    }
+
+    .stamp-8-link { width: 135px; }
+    .stamp-9-link { width: 150px; }
 }

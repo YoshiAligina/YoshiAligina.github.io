@@ -10,14 +10,14 @@
     parallax:  { intensity: 10, smooth: 0.06 },
     drag:      { friction: 0.92, threshold: 5, minV: 0.12 },
     magnetic:  { radius: 170, maxTilt: 1.8, smooth: 0.08 },
-    text:      { letterDelay: 55, wordDelay: 40 },
+    textPush:  { radius: 120, force: 18, smooth: 0.1 },
+    text:      { letterDelay: 55 },
   };
 
   /* ── Helpers ────────────────────────────── */
   const lerp  = (a, b, t) => a + (b - a) * t;
   const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
   const rand  = (lo, hi) => Math.random() * (hi - lo) + lo;
-  const easeOut = t => 1 - Math.pow(1 - t, 3);
 
   /* ── Mouse tracking ────────────────────── */
   const mouse  = { x: innerWidth / 2, y: innerHeight / 2 };
@@ -31,6 +31,8 @@
   /* ── State ─────────────────────────────── */
   const allStamps = [...document.querySelectorAll('.stamp')];
   const states = new Map();
+  const wordStates = new WeakMap();
+  let allWords = [];
   let startTime = null;
   let activeDrag = null;
 
@@ -53,6 +55,37 @@
     return 0;
   }
 
+  /* ── Split element text into word spans ── */
+  function splitIntoWords(el) {
+    const words = [];
+    const frag = document.createDocumentFragment();
+
+    [...el.childNodes].forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        node.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+          } else {
+            const span = document.createElement('span');
+            span.className = 'word';
+            span.textContent = part;
+            frag.appendChild(span);
+            words.push(span);
+          }
+        });
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        node.classList.add('word');
+        frag.appendChild(node);
+        words.push(node);
+      }
+    });
+
+    el.innerHTML = '';
+    el.appendChild(frag);
+    return words;
+  }
+
   /* ── Init ───────────────────────────────── */
   function init() {
     allStamps.forEach(stamp => {
@@ -62,7 +95,6 @@
 
       states.set(stamp, {
         w, depth, baseRot,
-        // Drag
         drag: { x: 0, y: 0 },
         vel:  { x: 0, y: 0 },
         isDragging: false,
@@ -70,7 +102,6 @@
         anchor: { x: 0, y: 0 },
         startOff: { x: 0, y: 0 },
         lastM: { x: 0, y: 0 },
-        // Magnetic
         curTilt: { x: 0, y: 0 },
       });
     });
@@ -82,6 +113,7 @@
 
   /* ── 1. Kinetic Text ───────────────────── */
   function setupText() {
+    /* Letter-split the h1 */
     const h1 = document.querySelector('.intro-header h1');
     if (h1) {
       const text = h1.textContent;
@@ -96,6 +128,12 @@
       });
     }
 
+    /* Mark accent spans before word splitting */
+    document.querySelectorAll('.statement > p > span').forEach(span => {
+      span.classList.add('accent-shimmer');
+    });
+
+    /* Text fade on containers */
     const subtitle = document.querySelector('.intro-header p');
     const caption  = document.querySelector('.caption');
     const stmts    = [...document.querySelectorAll('.statement p')];
@@ -105,8 +143,14 @@
       el.style.setProperty('--delay', `${550 + i * 140}ms`);
     });
 
-    document.querySelectorAll('.statement span').forEach(span => {
-      span.classList.add('accent-shimmer');
+    /* Word-split statement and caption for displacement */
+    [caption, ...stmts].filter(Boolean).forEach(el => {
+      allWords.push(...splitIntoWords(el));
+    });
+
+    /* Initialize word states */
+    allWords.forEach(w => {
+      wordStates.set(w, { tx: 0, ty: 0 });
     });
   }
 
@@ -172,21 +216,34 @@
   /* ── Animation Loop ────────────────────── */
   function tick(time) {
     if (!startTime) startTime = time;
-    const elapsed = time - startTime;
 
     smooth.x = lerp(smooth.x, mouse.x, C.parallax.smooth);
     smooth.y = lerp(smooth.y, mouse.y, C.parallax.smooth);
     const cx = innerWidth / 2;
     const cy = innerHeight / 2;
 
+    /* ── Cache stamp rects for text displacement ── */
+    const stampRects = [];
+    allStamps.forEach(stamp => {
+      const s = states.get(stamp);
+      const rect = s.w.getBoundingClientRect();
+      stampRects.push({
+        cx: rect.left + rect.width / 2,
+        cy: rect.top + rect.height / 2,
+        hw: rect.width / 2,
+        hh: rect.height / 2,
+      });
+    });
+
+    /* ── Update stamps ── */
     allStamps.forEach((stamp, i) => {
       const s = states.get(stamp);
 
-      /* ── Parallax ── */
+      /* Parallax */
       const px = ((smooth.x - cx) / cx) * C.parallax.intensity * s.depth;
       const py = ((smooth.y - cy) / cy) * C.parallax.intensity * s.depth * 0.4;
 
-      /* ── Drag momentum ── */
+      /* Drag momentum */
       if (!s.isDragging) {
         if (Math.abs(s.vel.x) > C.drag.minV || Math.abs(s.vel.y) > C.drag.minV) {
           s.drag.x += s.vel.x;
@@ -198,19 +255,17 @@
         }
       }
 
-      /* ── Magnetic tilt ── */
-      const rect = s.w.getBoundingClientRect();
-      const scx = rect.left + rect.width / 2;
-      const scy = rect.top + rect.height / 2;
-      const d = Math.hypot(mouse.x - scx, mouse.y - scy);
+      /* Magnetic tilt */
+      const sr = stampRects[i];
+      const d = Math.hypot(mouse.x - sr.cx, mouse.y - sr.cy);
       let tx = 0;
       if (d < C.magnetic.radius && !s.isDragging) {
         const strength = Math.pow(1 - d / C.magnetic.radius, 2);
-        tx = ((mouse.x - scx) / C.magnetic.radius) * C.magnetic.maxTilt * strength;
+        tx = ((mouse.x - sr.cx) / C.magnetic.radius) * C.magnetic.maxTilt * strength;
       }
       s.curTilt.x = lerp(s.curTilt.x, tx, C.magnetic.smooth);
 
-      /* ── Compose ── */
+      /* Compose */
       const totalX = px + s.drag.x;
       const totalY = py + s.drag.y;
       const totalRot = s.baseRot + s.curTilt.x;
@@ -220,6 +275,37 @@
         stamp.style.rotate = `${totalRot}deg`;
       } else {
         s.w.style.rotate = `${totalRot}deg`;
+      }
+    });
+
+    /* ── Text displacement: words push away from stamps ── */
+    allWords.forEach(word => {
+      const ws = wordStates.get(word);
+      const wr = word.getBoundingClientRect();
+      const wcx = wr.left + wr.width / 2;
+      const wcy = wr.top + wr.height / 2;
+
+      let pushX = 0, pushY = 0;
+
+      stampRects.forEach(sr => {
+        const dx = wcx - sr.cx;
+        const dy = wcy - sr.cy;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < C.textPush.radius && dist > 0) {
+          const strength = Math.pow(1 - dist / C.textPush.radius, 2);
+          pushX += (dx / dist) * C.textPush.force * strength;
+          pushY += (dy / dist) * C.textPush.force * strength;
+        }
+      });
+
+      ws.tx = lerp(ws.tx, pushX, C.textPush.smooth);
+      ws.ty = lerp(ws.ty, pushY, C.textPush.smooth);
+
+      if (Math.abs(ws.tx) > 0.3 || Math.abs(ws.ty) > 0.3) {
+        word.style.translate = `${ws.tx}px ${ws.ty}px`;
+      } else if (word.style.translate) {
+        word.style.translate = '';
       }
     });
 
