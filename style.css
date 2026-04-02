@@ -1,8 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
     --bg: #e8e7e5;
@@ -20,14 +16,13 @@ body {
     overflow-x: hidden;
 }
 
-.layout {
-    width: min(1500px, 100%);
+/* ─── Editorial layout (single column, stamps float over everything) ─── */
+.editorial {
+    position: relative;
+    width: min(1100px, 100%);
     margin: 0 auto;
-    padding: 26px 28px 20px;
-    display: grid;
-    grid-template-columns: 44% 56%;
-    gap: 18px;
-    align-items: start;
+    padding: 30px 32px 80px;
+    min-height: 100vh;
 }
 
 .intro-header h1 {
@@ -38,8 +33,7 @@ body {
     margin-bottom: 8px;
 }
 
-.intro-header p,
-.caption {
+.intro-header p, .caption {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     font-size: clamp(1.3rem, 1.6vw, 1.7rem);
@@ -51,41 +45,41 @@ body {
     width: min(88%, 320px);
     border: 1px solid #c3c1be;
     box-shadow: var(--soft-shadow);
+    position: relative;
+    z-index: 2;
 }
 
-.photo-wrap img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
+.photo-wrap img { width: 100%; height: auto; display: block; }
 
-.caption {
-    margin-top: 12px;
-}
+.caption { margin-top: 12px; position: relative; z-index: 2; }
 
+/* ─── Statement (pretext-managed text reflow area) ─── */
 .statement {
-    margin-top: 22px;
+    position: relative;
+    margin-top: 24px;
     font-size: clamp(1.65rem, 2.5vw, 2.95rem);
     font-weight: 500;
     letter-spacing: -0.04em;
-    line-height: 1.04;
-    max-width: 980px;
+    line-height: 1.15;
+    z-index: 1;
 }
 
-.statement p + p {
-    margin-top: 8px;
+.statement p { margin: 0; }
+.statement p + p { margin-top: 6px; }
+.statement .accent { color: var(--accent); }
+
+/* Pretext-rendered words (when JS takes over) */
+.statement.pretext-active p { display: none; }
+
+.flow-word {
+    position: absolute;
+    white-space: nowrap;
+    will-change: transform;
 }
 
-.statement span {
-    color: var(--accent);
-}
+.flow-word.accent { color: var(--accent); }
 
-.stamp-collage {
-    position: relative;
-    min-height: 980px;
-}
-
-/* ─── Link stamps ─── */
+/* ─── Stamps (scattered around the face) ─── */
 .stamp-link {
     position: absolute;
     display: inline-block;
@@ -93,33 +87,26 @@ body {
     text-decoration: none;
     translate: 0 0;
     will-change: translate;
+    z-index: 5;
 }
 
 .stamp-link .stamp {
     position: relative;
     display: block;
-    top: 0;
-    left: 0;
-    right: auto;
+    top: 0; left: 0; right: auto;
     width: 100%;
     z-index: 1;
 }
 
-/* ─── Cleaner link hover label ─── */
 .stamp-hover-label {
     position: absolute;
-    bottom: -6px;
+    bottom: -8px;
     left: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     font-weight: 500;
     font-size: 1rem;
-    letter-spacing: 0.02em;
     color: var(--muted);
-    padding: 0;
     opacity: 0;
     transform: translateX(-50%) translateY(4px);
     transition: opacity 320ms ease, transform 320ms ease;
@@ -134,20 +121,11 @@ body {
     transform: translateX(-50%) translateY(0);
 }
 
-.stamp-link:hover,
-.stamp-link:focus-visible {
-    z-index: 12;
-}
+.stamp-link:hover, .stamp-link:focus-visible { z-index: 12; }
 
-.stamp-link .stamp:hover,
-.stamp-link .stamp.stamp-active {
-    z-index: 1;
-}
-
-/* ─── Stamps: individual transform properties ─── */
 .stamp {
     position: absolute;
-    width: 214px;
+    width: 160px;
     filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.22));
     transition: scale 220ms ease, filter 220ms ease;
     transform-origin: center center;
@@ -155,108 +133,33 @@ body {
     translate: 0 0;
     scale: 1;
     will-change: translate, rotate;
+    z-index: 5;
 }
 
-.stamp:hover,
-.stamp.stamp-active {
+.stamp:hover, .stamp.stamp-active {
     scale: 1.06;
     filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.34));
     z-index: 10;
 }
 
-/* ─── Drag state ─── */
-.stamp-grabbed,
-.stamp-grabbed .stamp {
-    cursor: grabbing !important;
-}
+.stamp-grabbed, .stamp-grabbed .stamp { cursor: grabbing !important; }
+.stamp.stamp-grabbed { filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32)); scale: 1.04; z-index: 20; }
+.stamp-grabbed .stamp { filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32)); scale: 1.04; }
 
-.stamp.stamp-grabbed {
-    filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32));
-    scale: 1.04;
-    z-index: 20;
-}
+/* ─── Stamp positions: clustered around photo ─── */
+.stamp-1 { top: 25px;  left: 370px; width: 185px; rotate: -0.8deg; }
+.stamp-2 { top: 8px;   left: 570px; width: 140px; rotate: 0.6deg; }
+.stamp-3 { top: 190px; left: 420px; width: 170px; rotate: -0.5deg; }
+.stamp-4 { top: 15px;  right: 30px; width: 205px; rotate: 0.7deg; }
+.stamp-5 { top: 210px; left: 610px; width: 155px; rotate: -0.6deg; }
+.stamp-6 { top: 340px; left: 380px; width: 200px; rotate: 0.4deg; }
+.stamp-7 { top: 360px; left: 600px; width: 150px; rotate: -0.7deg; }
+.stamp-8-link { top: 490px; left: 60px;  width: 170px; }
+.stamp-8 { rotate: 0.5deg; }
+.stamp-9-link { top: 490px; left: 270px; width: 185px; aspect-ratio: 515 / 764; overflow: hidden; }
+.stamp-9 { height: 100%; object-fit: cover; object-position: center 52%; rotate: -0.4deg; }
 
-.stamp-grabbed .stamp {
-    filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32));
-    scale: 1.04;
-}
-
-/* ─── Stamp positions (using individual rotate) ─── */
-.stamp-1 {
-    top: 28px;
-    left: 4%;
-    width: 248px;
-    rotate: -0.8deg;
-}
-
-.stamp-2 {
-    top: 26px;
-    left: 28%;
-    width: 188px;
-    rotate: 0.6deg;
-}
-
-.stamp-3 {
-    top: 24px;
-    left: 50%;
-    width: 230px;
-    rotate: -0.5deg;
-}
-
-.stamp-4 {
-    top: 30px;
-    right: 2%;
-    width: 272px;
-    rotate: 0.7deg;
-}
-
-.stamp-5 {
-    top: 320px;
-    left: 6%;
-    width: 208px;
-    rotate: -0.6deg;
-}
-
-.stamp-6 {
-    top: 308px;
-    left: 28%;
-    width: 280px;
-    rotate: 0.4deg;
-}
-
-.stamp-7 {
-    top: 312px;
-    left: 58%;
-    width: 192px;
-    rotate: -0.7deg;
-}
-
-.stamp-8-link {
-    top: 606px;
-    left: 52%;
-    width: 215px;
-}
-
-.stamp-8 {
-    rotate: 0.5deg;
-}
-
-.stamp-9-link {
-    top: 318px;
-    right: 4%;
-    width: 236px;
-    aspect-ratio: 515 / 764;
-    overflow: hidden;
-}
-
-.stamp-9 {
-    height: 100%;
-    object-fit: cover;
-    object-position: center 52%;
-    rotate: -0.4deg;
-}
-
-/* ─── Kinetic text: letter animation ─── */
+/* ─── Kinetic text ─── */
 .letter {
     display: inline-block;
     opacity: 0;
@@ -264,224 +167,61 @@ body {
     animation: letterIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     animation-delay: calc(var(--i) * 55ms);
 }
+@keyframes letterIn { to { opacity: 1; translate: 0 0; } }
 
-@keyframes letterIn {
-    to {
-        opacity: 1;
-        translate: 0 0;
-    }
-}
-
-/* ─── Text fade-in ─── */
 .text-fade {
     opacity: 0;
     translate: 0 6px;
     animation: fadeSlideIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     animation-delay: var(--delay, 0ms);
 }
-
-@keyframes fadeSlideIn {
-    to {
-        opacity: 1;
-        translate: 0 0;
-    }
-}
-
-/* ─── Word spans for dynamic text displacement ─── */
-.word {
-    display: inline-block;
-    transition: translate 0.15s ease-out;
-    will-change: translate;
-}
-
-/* ─── Accent shimmer on hover ─── */
-.accent-shimmer {
-    position: relative;
-    display: inline-block;
-    transition: color 0.3s ease;
-}
-
-.accent-shimmer::after {
-    content: '';
-    position: absolute;
-    inset: -2px -5px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(194, 127, 129, 0.18) 40%,
-        rgba(194, 127, 129, 0.25) 50%,
-        rgba(194, 127, 129, 0.18) 60%,
-        transparent 100%
-    );
-    background-size: 200% 100%;
-    border-radius: 3px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
-.accent-shimmer:hover::after {
-    opacity: 1;
-    animation: shimmer 1.8s ease infinite;
-}
-
-@keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
+@keyframes fadeSlideIn { to { opacity: 1; translate: 0 0; } }
 
 /* ─── Responsive ─── */
-
-/* Tablet */
-@media (max-width: 1280px) {
-    .layout {
-        grid-template-columns: 1fr;
-        padding: 24px 24px 20px;
-    }
-
-    .stamp-collage {
-        min-height: 1040px;
-    }
-
-    .statement {
-        font-size: clamp(1.55rem, 3.1vw, 2.4rem);
-    }
-
-    .photo-wrap {
-        width: min(70%, 300px);
-    }
-}
-
-/* Small tablet / large phone */
 @media (max-width: 900px) {
-    .stamp-collage {
-        min-height: 900px;
-    }
-
-    .stamp {
-        width: 180px;
-    }
-
-    .stamp-1 { width: 210px; }
-    .stamp-2 { width: 158px; }
-    .stamp-3 { width: 195px; }
-    .stamp-4 { width: 230px; }
-    .stamp-5 { width: 175px; }
-    .stamp-6 { width: 235px; }
-    .stamp-7 { width: 165px; }
-    .stamp-8-link { width: 180px; }
-    .stamp-9-link { width: 200px; }
+    .stamp-1 { left: 280px; width: 150px; }
+    .stamp-2 { left: 440px; width: 120px; }
+    .stamp-3 { left: 300px; width: 145px; }
+    .stamp-4 { right: 10px; width: 165px; }
+    .stamp-5 { left: 470px; width: 130px; }
+    .stamp-6 { left: 280px; width: 170px; }
+    .stamp-7 { left: 470px; width: 130px; }
+    .stamp-8-link { top: 420px; width: 150px; }
+    .stamp-9-link { top: 420px; left: 230px; width: 160px; }
+    .photo-wrap { width: min(70%, 260px); }
 }
 
-/* Phone */
 @media (max-width: 760px) {
-    .layout {
-        padding: 20px 16px 24px;
-    }
-
-    .intro-header p,
-    .caption {
-        font-size: 1.35rem;
-    }
-
-    .statement {
-        margin-top: 18px;
-        font-size: clamp(1.4rem, 6.9vw, 2.2rem);
-    }
-
-    .photo-wrap {
-        width: min(80%, 280px);
-    }
-
-    .stamp-collage {
-        min-height: 840px;
-    }
-
-    .stamp {
-        width: 160px;
-    }
-
-    .stamp-1 {
-        width: 194px;
-        left: 0;
-    }
-
-    .stamp-2 {
-        width: 144px;
-        left: 34%;
-    }
-
-    .stamp-3 {
-        width: 170px;
-        left: 58%;
-    }
-
-    .stamp-4 {
-        width: 202px;
-        right: -4px;
-    }
-
-    .stamp-6 {
-        width: 220px;
-    }
-
-    .stamp-8-link,
-    .stamp-9-link {
-        top: 470px;
-    }
-
-    .stamp-8-link {
-        width: 160px;
-    }
-
-    .stamp-9-link {
-        width: 176px;
-    }
-
-    .stamp-hover-label {
-        font-size: 0.85rem;
-    }
+    .editorial { padding: 20px 16px 50px; }
+    .intro-header p, .caption { font-size: 1.35rem; }
+    .statement { font-size: clamp(1.3rem, 5.5vw, 2rem); }
+    .photo-wrap { width: min(65%, 240px); }
+    .stamp { width: 120px; }
+    .stamp-1 { left: 230px; width: 130px; }
+    .stamp-2 { left: 370px; width: 110px; }
+    .stamp-3 { top: 160px; left: 250px; width: 120px; }
+    .stamp-4 { right: 5px; width: 140px; }
+    .stamp-5 { top: 180px; left: 390px; width: 110px; }
+    .stamp-6 { top: 280px; left: 230px; width: 150px; }
+    .stamp-7 { top: 290px; left: 400px; width: 115px; }
+    .stamp-8-link { top: 370px; left: 30px; width: 130px; }
+    .stamp-9-link { top: 370px; left: 190px; width: 140px; }
+    .stamp-hover-label { font-size: 0.85rem; }
 }
 
-/* Small phone */
 @media (max-width: 480px) {
-    .layout {
-        padding: 16px 12px 20px;
-    }
-
-    .intro-header h1 {
-        font-size: 1.7rem;
-    }
-
-    .statement {
-        font-size: clamp(1.2rem, 6vw, 1.8rem);
-    }
-
-    .photo-wrap {
-        width: min(90%, 250px);
-    }
-
-    .stamp-collage {
-        min-height: 700px;
-    }
-
-    .stamp {
-        width: 130px;
-    }
-
-    .stamp-1 { width: 160px; }
-    .stamp-2 { width: 120px; left: 30%; }
-    .stamp-3 { width: 140px; left: 55%; }
-    .stamp-4 { width: 165px; }
-    .stamp-5 { top: 260px; width: 140px; }
-    .stamp-6 { top: 250px; width: 180px; }
-    .stamp-7 { top: 255px; width: 130px; }
-
-    .stamp-8-link,
-    .stamp-9-link {
-        top: 400px;
-    }
-
-    .stamp-8-link { width: 135px; }
-    .stamp-9-link { width: 150px; }
+    .editorial { padding: 16px 12px 40px; }
+    .intro-header h1 { font-size: 1.7rem; }
+    .statement { font-size: clamp(1.1rem, 5vw, 1.6rem); }
+    .photo-wrap { width: min(75%, 200px); }
+    .stamp { width: 100px; }
+    .stamp-1 { left: 190px; width: 110px; }
+    .stamp-2 { left: 310px; width: 95px; }
+    .stamp-3 { top: 140px; left: 210px; width: 100px; }
+    .stamp-4 { right: 0; width: 120px; }
+    .stamp-5 { top: 160px; left: 330px; width: 95px; }
+    .stamp-6 { top: 240px; left: 190px; width: 130px; }
+    .stamp-7 { top: 250px; left: 340px; width: 100px; }
+    .stamp-8-link { top: 320px; left: 10px; width: 110px; }
+    .stamp-9-link { top: 320px; left: 140px; width: 120px; }
 }
