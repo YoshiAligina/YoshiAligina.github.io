@@ -10,7 +10,6 @@
     parallax:  { intensity: 10, smooth: 0.06 },
     drag:      { friction: 0.92, threshold: 5, minV: 0.12 },
     magnetic:  { radius: 170, maxTilt: 1.8, smooth: 0.08 },
-    entrance:  { stagger: 75, duration: 750, offset: 45, rot: 5 },
     text:      { letterDelay: 55, wordDelay: 40 },
   };
 
@@ -63,11 +62,6 @@
 
       states.set(stamp, {
         w, depth, baseRot,
-        // Entrance
-        eOx: rand(-C.entrance.offset, C.entrance.offset),
-        eOy: rand(12, C.entrance.offset),
-        eRot: rand(-C.entrance.rot, C.entrance.rot),
-        eProgress: 0,
         // Drag
         drag: { x: 0, y: 0 },
         vel:  { x: 0, y: 0 },
@@ -79,8 +73,6 @@
         // Magnetic
         curTilt: { x: 0, y: 0 },
       });
-
-      w.style.opacity = '0';
     });
 
     setupDrag();
@@ -122,7 +114,7 @@
   function setupDrag() {
     function onDown(stamp, x, y) {
       const s = states.get(stamp);
-      if (!s || s.eProgress < 1) return;
+      if (!s) return;
       s.isDragging = true;
       s.wasDragged = false;
       s.anchor  = { x, y };
@@ -190,22 +182,6 @@
     allStamps.forEach((stamp, i) => {
       const s = states.get(stamp);
 
-      /* ── Entrance ── */
-      const entDelay = C.entrance.stagger * i;
-      if (s.eProgress < 1) {
-        if (elapsed >= entDelay) {
-          s.eProgress = clamp((elapsed - entDelay) / C.entrance.duration, 0, 1);
-        }
-        s.w.style.opacity = easeOut(s.eProgress);
-      } else if (s.w.style.opacity !== '') {
-        s.w.style.opacity = '';
-      }
-
-      const ep = easeOut(clamp(s.eProgress, 0, 1));
-      const ex = s.eOx * (1 - ep);
-      const ey = s.eOy * (1 - ep);
-      const er = s.eRot * (1 - ep);
-
       /* ── Parallax ── */
       const px = ((smooth.x - cx) / cx) * C.parallax.intensity * s.depth;
       const py = ((smooth.y - cy) / cy) * C.parallax.intensity * s.depth * 0.4;
@@ -228,16 +204,16 @@
       const scy = rect.top + rect.height / 2;
       const d = Math.hypot(mouse.x - scx, mouse.y - scy);
       let tx = 0;
-      if (d < C.magnetic.radius && !s.isDragging && s.eProgress >= 1) {
+      if (d < C.magnetic.radius && !s.isDragging) {
         const strength = Math.pow(1 - d / C.magnetic.radius, 2);
         tx = ((mouse.x - scx) / C.magnetic.radius) * C.magnetic.maxTilt * strength;
       }
       s.curTilt.x = lerp(s.curTilt.x, tx, C.magnetic.smooth);
 
       /* ── Compose ── */
-      const totalX = ex + px + s.drag.x;
-      const totalY = ey + py + s.drag.y;
-      const totalRot = s.baseRot + er + s.curTilt.x;
+      const totalX = px + s.drag.x;
+      const totalY = py + s.drag.y;
+      const totalRot = s.baseRot + s.curTilt.x;
 
       s.w.style.translate = `${totalX}px ${totalY}px`;
       if (stamp !== s.w) {
