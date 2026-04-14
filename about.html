@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yoshi — About</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #e8e7e5;
+      --ink: #2f2f32;
+      --muted: #7f7b79;
+      --accent: #c27f81;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      touch-action: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── Back button ── */
+    .back-btn {
+      position: fixed;
+      top: 28px;
+      left: 32px;
+      z-index: 100;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 200ms ease;
+      pointer-events: auto;
+    }
+    .back-btn:hover { color: var(--ink); }
+
+    /* ── Hint label ── */
+    .hint-label {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 100;
+    }
+
+    /* ── Textstring container ── */
+    #container {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 28px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .letter {
+      position: absolute;
+      top: 0; left: 0;
+      will-change: transform;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
+      line-height: 1;
+      color: var(--ink);
+      pointer-events: none;
+    }
+
+    .letter.draggable {
+      pointer-events: auto;
+      cursor: grab;
+      z-index: 10;
+      touch-action: none;
+    }
+
+    .letter.dragging { cursor: grabbing; }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-btn">← back</a>
+  <div class="hint-label" id="hint-label">drag the last few letters to unravel</div>
+  <div id="container"></div>
+
+  <script type="module">
+    import { prepareWithSegments, layoutWithLines } from 'https://esm.sh/@chenglou/pretext@0.0.5';
+
+    await document.fonts.ready;
+
+    const FULL_TEXT = "hi! i'm yoshita aligina — most people call me yoshi. i'm an incoming data management professional at bloomberg, and a student at rutgers university studying data science, computer science, statistics, and philosophy. i love building things that sit at the intersection of data and design: websites that move, numbers that tell stories, ideas that feel human. when i'm not at a computer, i'm collecting stamps, reading, or chasing the next interesting thing.";
+    const SHORT_TEXT = "hi! i'm yoshita aligina — most people call me yoshi. i'm an incoming data management professional at bloomberg, studying data science, computer science, and philosophy at rutgers. i love building things at the intersection of data and design.";
+
+    const TEXT = window.innerWidth < 600 ? SHORT_TEXT : FULL_TEXT;
+    const FONT = '22px "DM Sans", sans-serif';
+    const LINE_HEIGHT = 32;
+    const CONSTRAINT_DIST = 1.2;
+    const UNLOCK_THRESHOLD = 1;
+    const ITERATIONS = 12;
+    const DAMPING = 0.97;
+    const GRAVITY = 0.15;
+
+    let gravityOn = true;
+    let unraveling = false;
+    let unravelIdx = -1;
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'f' || e.key === 'F') {
+        gravityOn = !gravityOn;
+        if (gravityOn && !unraveling) {
+          unraveling = true;
+          hintLabel.style.opacity = '0';
+          unravelIdx = letters.length - 1;
+          while (unravelIdx >= 0 && !letters[unravelIdx].locked) unravelIdx--;
+        }
+      }
+    });
+
+    const container = document.getElementById('container');
+    const hintLabel = document.getElementById('hint-label');
+    const measureCtx = document.createElement('canvas').getContext('2d');
+    measureCtx.font = FONT;
+
+    const prepared = prepareWithSegments(TEXT, FONT);
+    const MARGIN = 0;
+    const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+
+    function getMaxWidth() {
+      return container.getBoundingClientRect().width - MARGIN * 2;
+    }
+
+    const allGraphemes = [...segmenter.segment(TEXT)].map(s => s.segment);
+    const graphemeWidths = allGraphemes.map(g => measureCtx.measureText(g).width);
+
+    function layoutPositions(maxWidth) {
+      const rawPositions = [];
+      let x = 0;
+      let lineY = 0;
+
+      for (let gi = 0; gi < allGraphemes.length; gi++) {
+        const g = allGraphemes[gi];
+        const w = graphemeWidths[gi];
+
+        if (g === ' ' && x > 0) {
+          let wordW = 0;
+          for (let j = gi + 1; j < allGraphemes.length && allGraphemes[j] !== ' '; j++) {
+            wordW += graphemeWidths[j];
+          }
+          if (x + w + wordW > maxWidth) {
+            rawPositions.push({ x: x + MARGIN, y: lineY, w });
+            x = 0;
+            lineY += LINE_HEIGHT;
+            continue;
+          }
+        }
+
+        rawPositions.push({ x: x + MARGIN, y: lineY, w });
+        x += w;
+      }
+
+      const totalHeight = lineY + LINE_HEIGHT;
+      const containerRect = container.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const offsetY = Math.max(0, (viewportHeight - containerRect.top - totalHeight) * 0.3);
+
+      return rawPositions.map(p => ({ x: p.x, y: p.y + offsetY, w: p.w }));
+    }
+
+    let positions = layoutPositions(getMaxWidth());
+
+    function buildZigzagMapping(maxWidth) {
+      const { lines } = layoutWithLines(prepared, maxWidth, LINE_HEIGHT);
+      const lineIndices = [];
+      let gi = 0;
+      for (let li = 0; li < lines.length; li++) {
+        const lineGraphemes = [...segmenter.segment(lines[li].text)].map(s => s.segment);
+        const indices = [];
+        for (let j = 0; j < lineGraphemes.length; j++) indices.push(gi++);
+        lineIndices.push(indices);
+      }
+      const lastLineIdx = lineIndices.length - 1;
+      const needFlip = lastLineIdx % 2 === 1;
+      const stringOrder = [];
+      for (let li = 0; li < lineIndices.length; li++) {
+        const reversed = needFlip ? (li % 2 === 0) : (li % 2 === 1);
+        if (reversed) stringOrder.push(...[...lineIndices[li]].reverse());
+        else stringOrder.push(...lineIndices[li]);
+      }
+      return stringOrder;
+    }
+
+    const stringOrder = buildZigzagMapping(getMaxWidth());
+
+    const letters = stringOrder.map(ri => {
+      const p = positions[ri];
+      return {
+        ch: allGraphemes[ri],
+        w: p.w,
+        x: p.x, y: p.y,
+        ox: p.x, oy: p.y,
+        px: p.x, py: p.y,
+        readingIdx: ri,
+        locked: true
+      };
+    });
+
+    function computeRestLengths() {
+      const rests = [];
+      for (let i = 0; i < letters.length - 1; i++) {
+        const a = letters[i], b = letters[i + 1];
+        const dist = Math.hypot(
+          (b.ox + b.w / 2) - (a.ox + a.w / 2),
+          (b.oy + LINE_HEIGHT / 2) - (a.oy + LINE_HEIGHT / 2)
+        );
+        rests.push(dist * CONSTRAINT_DIST);
+      }
+      return rests;
+    }
+
+    let restLengths = computeRestLengths();
+
+    const els = [];
+    for (const l of letters) {
+      const span = document.createElement('span');
+      span.className = 'letter';
+      span.textContent = l.ch;
+      container.appendChild(span);
+      els.push(span);
+    }
+
+    // Unlock last 6 letters
+    const lastIdx = letters.length - 1;
+    for (let i = lastIdx; i > lastIdx - 6; i--) {
+      letters[i].locked = false;
+      els[i].classList.add('draggable');
+    }
+
+    // Show hint after brief delay
+    setTimeout(() => { hintLabel.style.opacity = '1'; }, 600);
+
+    window.addEventListener('resize', () => {
+      const newPositions = layoutPositions(getMaxWidth());
+      for (let i = 0; i < letters.length; i++) {
+        const np = newPositions[letters[i].readingIdx];
+        if (letters[i].locked) {
+          letters[i].x = np.x; letters[i].y = np.y;
+          letters[i].ox = np.x; letters[i].oy = np.y;
+          letters[i].px = np.x; letters[i].py = np.y;
+        } else {
+          letters[i].ox = np.x; letters[i].oy = np.y;
+        }
+      }
+    });
+
+    // Drag — multitouch: map pointerId → { idx, offsetX, offsetY }
+    const drags = new Map();
+    function isDragged(idx) {
+      for (const d of drags.values()) if (d.idx === idx) return true;
+      return false;
+    }
+
+    container.addEventListener('pointerdown', (e) => {
+      const idx = els.indexOf(e.target);
+      if (idx === -1 || letters[idx].locked) return;
+      if (isDragged(idx)) return;
+      const rect = container.getBoundingClientRect();
+      drags.set(e.pointerId, {
+        idx,
+        offsetX: e.clientX - rect.left - letters[idx].x,
+        offsetY: e.clientY - rect.top - letters[idx].y
+      });
+      els[idx].classList.add('dragging');
+      e.target.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      const d = drags.get(e.pointerId);
+      if (!d) return;
+      const rect = container.getBoundingClientRect();
+      const l = letters[d.idx];
+      l.x = e.clientX - rect.left - d.offsetX;
+      l.y = e.clientY - rect.top - d.offsetY;
+      l.px = l.x; l.py = l.y;
+      l.locked = false;
+    });
+
+    window.addEventListener('pointerup', (e) => {
+      const d = drags.get(e.pointerId);
+      if (!d) return;
+      els[d.idx].classList.remove('dragging');
+      drags.delete(e.pointerId);
+    });
+
+    window.addEventListener('pointercancel', (e) => {
+      const d = drags.get(e.pointerId);
+      if (!d) return;
+      els[d.idx].classList.remove('dragging');
+      drags.delete(e.pointerId);
+    });
+
+    function simulate() {
+      // Unravel step
+      if (unraveling) {
+        if (!gravityOn || unravelIdx < 0) { unraveling = false; }
+        else if (letters[unravelIdx].locked) {
+          letters[unravelIdx].locked = false;
+          letters[unravelIdx].px = letters[unravelIdx].x;
+          letters[unravelIdx].py = letters[unravelIdx].y - 0.5;
+          unravelIdx--;
+        } else {
+          unravelIdx--;
+        }
+      }
+
+      // Unlock propagation
+      for (let i = letters.length - 2; i >= 0; i--) {
+        if (letters[i].locked && !letters[i + 1].locked) {
+          const a = letters[i], b = letters[i + 1];
+          const dx = (b.x + b.w / 2) - (a.ox + a.w / 2);
+          const dy = (b.y + LINE_HEIGHT / 2) - (a.oy + LINE_HEIGHT / 2);
+          const dist = Math.hypot(dx, dy);
+          if (dist > restLengths[i] + UNLOCK_THRESHOLD) {
+            a.locked = false;
+            a.px = a.x; a.py = a.y;
+            hintLabel.style.opacity = '0';
+          }
+        }
+      }
+
+      // Verlet integration
+      for (let i = 0; i < letters.length; i++) {
+        const l = letters[i];
+        if (l.locked || isDragged(i)) continue;
+        const vx = (l.x - l.px) * DAMPING;
+        const vy = (l.y - l.py) * DAMPING;
+        l.px = l.x; l.py = l.y;
+        l.x += vx;
+        l.y += vy + (gravityOn ? GRAVITY : 0);
+      }
+
+      // Distance constraints
+      for (let iter = 0; iter < ITERATIONS; iter++) {
+        for (let i = 0; i < letters.length - 1; i++) {
+          const a = letters[i], b = letters[i + 1];
+          if (a.locked && b.locked) continue;
+          const ax = a.x + a.w / 2, ay = a.y + LINE_HEIGHT / 2;
+          const bx = b.x + b.w / 2, by = b.y + LINE_HEIGHT / 2;
+          const dx = bx - ax, dy = by - ay;
+          const dist = Math.hypot(dx, dy) || 0.001;
+          const diff = (dist - restLengths[i]) / dist;
+          const aFixed = a.locked || isDragged(i);
+          const bFixed = b.locked || isDragged(i + 1);
+          if (aFixed && !bFixed)        { b.x -= dx * diff;       b.y -= dy * diff; }
+          else if (!aFixed && bFixed)   { a.x += dx * diff;       a.y += dy * diff; }
+          else if (!aFixed && !bFixed)  {
+            a.x += dx * diff * 0.5; a.y += dy * diff * 0.5;
+            b.x -= dx * diff * 0.5; b.y -= dy * diff * 0.5;
+          }
+        }
+      }
+
+      // Letter collision
+      const RADIUS = 7;
+      for (let i = 0; i < letters.length; i++) {
+        if (letters[i].locked) continue;
+        const a = letters[i];
+        const acx = a.x + a.w / 2, acy = a.y + LINE_HEIGHT / 2;
+        for (let j = i + 1; j < letters.length; j++) {
+          if (letters[j].locked) continue;
+          if (Math.abs(i - j) === 1) continue;
+          const b = letters[j];
+          const bcx = b.x + b.w / 2, bcy = b.y + LINE_HEIGHT / 2;
+          const dx = bcx - acx, dy = bcy - acy;
+          const dist = Math.hypot(dx, dy) || 0.001;
+          const minDist = RADIUS * 2;
+          if (dist < minDist) {
+            const overlap = (minDist - dist) / dist * 0.5;
+            const aD = isDragged(i), bD = isDragged(j);
+            if (aD)       { b.x += dx * overlap; b.y += dy * overlap; }
+            else if (bD)  { a.x -= dx * overlap; a.y -= dy * overlap; }
+            else {
+              a.x -= dx * overlap; a.y -= dy * overlap;
+              b.x += dx * overlap; b.y += dy * overlap;
+            }
+          }
+        }
+      }
+
+      // Boundary
+      const cRect = container.getBoundingClientRect();
+      const minX = -cRect.left, minY = -cRect.top;
+      const maxX = window.innerWidth - cRect.left;
+      const maxY = window.innerHeight - cRect.top;
+      const bounce = 0.4;
+      for (let i = 0; i < letters.length; i++) {
+        const l = letters[i];
+        if (l.locked || isDragged(i)) continue;
+        if (l.x < minX)             { l.x = minX;         l.px = l.x + (l.x - l.px) * bounce; }
+        if (l.x + l.w > maxX)       { l.x = maxX - l.w;   l.px = l.x + (l.x - l.px) * bounce; }
+        if (l.y < minY)             { l.y = minY;         l.py = l.y + (l.y - l.py) * bounce; }
+        if (l.y + LINE_HEIGHT > maxY) { l.y = maxY - LINE_HEIGHT; l.py = l.y + (l.y - l.py) * bounce; }
+      }
+    }
+
+    // Fixed 120Hz timestep, capped to avoid spiral of death
+    const FIXED_DT = 1 / 120;
+    const MAX_STEPS = 4;
+    let accumulator = 0;
+    let lastTime = -1;
+
+    function render(now) {
+      if (lastTime < 0) { lastTime = now; requestAnimationFrame(render); return; }
+      const dt = Math.min((now - lastTime) / 1000, MAX_STEPS * FIXED_DT);
+      lastTime = now;
+      accumulator += dt;
+      while (accumulator >= FIXED_DT) {
+        simulate();
+        accumulator -= FIXED_DT;
+      }
+      for (let i = 0; i < letters.length; i++) {
+        if (!letters[i].locked) els[i].classList.add('draggable');
+        els[i].style.transform = `translate(${letters[i].x}px, ${letters[i].y}px)`;
+      }
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
