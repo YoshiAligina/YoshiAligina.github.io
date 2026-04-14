@@ -1,22 +1,25 @@
 /* ────────────────────────────────────────────
-   Editorial Stamps — Pretext-style text reflow
-   Canvas-based measurement, zero DOM reads for layout
+   Editorial Stamps — Pretext-powered text reflow
+   Uses @chenglou/pretext for fast, accurate line-breaking
+   around draggable stamp obstacles
    ──────────────────────────────────────────── */
 
 (async () => {
 'use strict';
+
+const { prepareWithSegments, layoutNextLine } =
+  await import('https://esm.sh/@chenglou/pretext@0.0.5');
 
 /* ── Config ─────────────────────────────── */
 const C = {
   parallax:  { intensity: 10, smooth: 0.06 },
   drag:      { friction: 0.92, threshold: 5, minV: 0.12 },
   magnetic:  { radius: 170, maxTilt: 1.8, smooth: 0.08 },
-  reflow:    { padding: 14 }, // px margin around stamps when carving text
+  reflow:    { padding: 14 },
 };
 
 /* ── Helpers ─────────────────────────────── */
 const lerp  = (a, b, t) => a + (b - a) * t;
-const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 
 /* ── Mouse ───────────────────────────────── */
 const mouse  = { x: innerWidth / 2, y: innerHeight / 2 };
@@ -45,50 +48,44 @@ function readBaseRot(el) {
 }
 
 /* ══════════════════════════════════════════
-   PRETEXT-STYLE TEXT ENGINE
-   Canvas-based measurement, slot-carving reflow
+   PRETEXT TEXT ENGINE
    ══════════════════════════════════════════ */
 
-const _cvs = document.createElement('canvas');
-const _ctx = _cvs.getContext('2d');
+/* Extract plain text from statement HTML and track which characters are accented */
+function extractText(el) {
+  let fullText = '';
+  const accentRanges = [];
 
-/* Prepare: cache font metrics (like pretext.prepare()) */
-function prepare(font) {
-  _ctx.font = font;
-  const spaceW = _ctx.measureText('\u00A0').width;
-  return { font, spaceW };
-}
-
-/* Measure a word's width (like pretext.layout() for single words) */
-function measureWord(ptx, text) {
-  _ctx.font = ptx.font;
-  return _ctx.measureText(text).width;
-}
-
-/* Extract words from statement HTML, preserving accent info */
-function extractWords(el) {
-  const words = [];
-  const paragraphs = el.querySelectorAll('p');
-  paragraphs.forEach((p, pi) => {
-    if (pi > 0) words.push({ text: '', accent: false, width: 0, isBreak: true });
+  el.querySelectorAll('p').forEach((p, pi) => {
+    if (pi > 0) fullText += ' ';
     [...p.childNodes].forEach(node => {
       if (node.nodeType === Node.TEXT_NODE) {
-        node.textContent.trim().split(/\s+/).filter(Boolean).forEach(t => {
-          words.push({ text: t, accent: false });
-        });
+        fullText += node.textContent;
       } else if (node.nodeType === Node.ELEMENT_NODE) {
-        words.push({ text: node.textContent, accent: true });
+        const start = fullText.length;
+        fullText += node.textContent;
+        accentRanges.push({ start, end: fullText.length });
       }
     });
   });
-  return words;
+
+  return { fullText, accentRanges };
+}
+
+/* Build per-character accent lookup */
+function buildAccentMap(fullText, accentRanges) {
+  const map = new Uint8Array(fullText.length);
+  for (const { start, end } of accentRanges) {
+    for (let i = start; i < end; i++) map[i] = 1;
+  }
+  return map;
 }
 
 /* Carve available horizontal slots on a line, subtracting obstacles */
-function carveSlots(lineLeft, lineRight, lineTop, lineBot, obstacles) {
-  let slots = [{ left: lineLeft, right: lineRight }];
+function getLineSpace(y, lineH, containerW, obstacles) {
+  let slots = [{ left: 0, right: containerW }];
   for (const obs of obstacles) {
-    if (obs.bottom <= lineTop || obs.top >= lineBot) continue;
+    if (obs.bottom <= y || obs.top >= y + lineH) continue;
     const next = [];
     for (const s of slots) {
       if (obs.right <= s.left || obs.left >= s.right) { next.push(s); continue; }
@@ -97,70 +94,69 @@ function carveSlots(lineLeft, lineRight, lineTop, lineBot, obstacles) {
     }
     slots = next;
   }
-  return slots.filter(s => (s.right - s.left) > 30);
-}
-
-/* Reflow text around obstacles (the editorial engine algorithm) */
-function reflowText(ptx, words, containerW, lineH, obstacles) {
-  const result = [];
-  let y = 0;
-  let wi = 0;
-  const paraGap = lineH * 0.4;
-  let maxIter = 200; // safety
-
-  while (wi < words.length && maxIter-- > 0) {
-    const w = words[wi];
-    if (w.isBreak) { y += paraGap; wi++; continue; }
-
-    const slots = carveSlots(0, containerW, y, y + lineH, obstacles);
-    if (slots.length === 0) { y += lineH * 0.5; continue; }
-
-    let placed = false;
-    for (const slot of slots) {
-      let x = slot.left;
-      while (wi < words.length && !words[wi].isBreak) {
-        const word = words[wi];
-        const gap = (x > slot.left) ? ptx.spaceW : 0;
-        if (x + gap + word.width > slot.right + 0.5) break;
-        x += gap;
-        result.push({ text: word.text, accent: word.accent, x, y });
-        x += word.width;
-        wi++;
-        placed = true;
-      }
-    }
-    if (!placed && wi < words.length && !words[wi].isBreak) {
-      // Force-place one word to avoid infinite loop
-      const slot = slots[0] || { left: 0 };
-      result.push({ text: words[wi].text, accent: words[wi].accent, x: slot.left, y });
-      wi++;
-    }
-    y += lineH;
+  slots = slots.filter(s => (s.right - s.left) > 30);
+  if (!slots.length) return { offset: 0, width: 0 };
+  // Pick widest usable slot
+  let best = slots[0];
+  for (const s of slots) {
+    if ((s.right - s.left) > (best.right - best.left)) best = s;
   }
-  return { positioned: result, height: y + lineH };
+  return { offset: best.left, width: best.right - best.left };
 }
 
-/* Render positioned words into DOM */
-const wordPool = [];
-function renderWords(container, positioned) {
-  // Grow pool if needed
-  while (wordPool.length < positioned.length) {
+/* Render a line's text as HTML with accent spans */
+function lineToHTML(text, charOffset, accentMap) {
+  let html = '';
+  let inAccent = false;
+  for (let i = 0; i < text.length; i++) {
+    const isAccent = accentMap[charOffset + i] === 1;
+    if (isAccent !== inAccent) {
+      if (inAccent) html += '</span>';
+      if (isAccent) html += '<span class="accent">';
+      inAccent = isAccent;
+    }
+    // Escape HTML entities
+    const ch = text[i];
+    if (ch === '<') html += '&lt;';
+    else if (ch === '>') html += '&gt;';
+    else if (ch === '&') html += '&amp;';
+    else html += ch;
+  }
+  if (inAccent) html += '</span>';
+  return html;
+}
+
+/* Line DOM pool */
+const linePool = [];
+function renderLines(container, lines, accentMap, fullText) {
+  while (linePool.length < lines.length) {
     const span = document.createElement('span');
-    span.className = 'flow-word';
+    span.className = 'flow-line';
     container.appendChild(span);
-    wordPool.push(span);
+    linePool.push({ el: span, html: '' });
   }
-  // Update visible words
-  positioned.forEach((wp, i) => {
-    const span = wordPool[i];
-    if (span.textContent !== wp.text) span.textContent = wp.text;
-    span.style.transform = `translate(${wp.x}px, ${wp.y}px)`;
-    span.classList.toggle('accent', wp.accent);
-    span.style.display = '';
+  // Map line text back to character offsets in fullText
+  let searchFrom = 0;
+  for (const line of lines) {
+    const trimmed = line.text;
+    const idx = fullText.indexOf(trimmed, searchFrom);
+    line.charOffset = idx >= 0 ? idx : searchFrom;
+    searchFrom = line.charOffset + trimmed.length;
+  }
+  // Update visible lines
+  lines.forEach((line, i) => {
+    const pool = linePool[i];
+    const html = lineToHTML(line.text, line.charOffset, accentMap);
+    if (pool.html !== html) {
+      pool.el.innerHTML = html;
+      pool.html = html;
+    }
+    pool.el.style.transform = `translate(${line.x}px, ${line.y}px)`;
+    pool.el.style.display = '';
   });
-  // Hide extra
-  for (let i = positioned.length; i < wordPool.length; i++) {
-    wordPool[i].style.display = 'none';
+  // Hide extras
+  for (let i = lines.length; i < linePool.length; i++) {
+    linePool[i].el.style.display = 'none';
   }
 }
 
@@ -168,7 +164,7 @@ function renderWords(container, positioned) {
    INIT & SYSTEMS
    ══════════════════════════════════════════ */
 
-let ptx, textWords, statementEl;
+let prepared, fullText, accentMap, statementEl;
 
 async function init() {
   await document.fonts.ready;
@@ -186,21 +182,20 @@ async function init() {
     });
   });
 
-  // Text setup
+  // Pretext setup
   statementEl = document.getElementById('statement');
-  const computedFont = getComputedStyle(statementEl).font;
-  ptx = prepare(computedFont);
-
-  // Extract and measure words
-  textWords = extractWords(statementEl);
-  textWords.forEach(w => { if (!w.isBreak) w.width = measureWord(ptx, w.text); });
+  const font = getComputedStyle(statementEl).font;
+  const extracted = extractText(statementEl);
+  fullText = extracted.fullText;
+  accentMap = buildAccentMap(fullText, extracted.accentRanges);
+  prepared = prepareWithSegments(fullText, font);
 
   // Activate pretext mode (hides original <p> tags)
   statementEl.classList.add('pretext-active');
 
   // Kinetic text for h1
   setupH1();
-  // Fade-in for subtitle + caption
+  // Fade-in for subtitle
   setupFades();
   // Drag system
   setupDrag();
@@ -315,8 +310,8 @@ function tick() {
     else s.w.style.rotate = `${rot}deg`;
   });
 
-  // Reflow text around stamps
-  if (statementEl) {
+  // Reflow text with pretext
+  if (statementEl && prepared) {
     const cRect = statementEl.getBoundingClientRect();
     const containerW = cRect.width;
     const fontSize = parseFloat(getComputedStyle(statementEl).fontSize);
@@ -334,15 +329,31 @@ function tick() {
         top:    r.top - cRect.top - pad,
         bottom: r.bottom - cRect.top + pad,
       };
-      // Only include if overlapping the text area
-      if (obs.bottom > 0 && obs.top < 600 && obs.right > 0 && obs.left < containerW) {
+      if (obs.bottom > 0 && obs.top < 800 && obs.right > 0 && obs.left < containerW) {
         obstacles.push(obs);
       }
     });
 
-    const { positioned, height } = reflowText(ptx, textWords, containerW, lineH, obstacles);
-    renderWords(statementEl, positioned);
-    statementEl.style.minHeight = height + 'px';
+    // Lay out text line by line, adjusting width per line for obstacles
+    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
+    let y = 0;
+    const lines = [];
+    let safety = 200;
+
+    while (safety-- > 0) {
+      const space = getLineSpace(y, lineH, containerW, obstacles);
+      if (space.width < 30) { y += lineH * 0.5; continue; }
+
+      const line = layoutNextLine(prepared, cursor, space.width);
+      if (!line) break;
+
+      lines.push({ text: line.text, width: line.width, x: space.offset, y });
+      cursor = line.end;
+      y += lineH;
+    }
+
+    renderLines(statementEl, lines, accentMap, fullText);
+    statementEl.style.minHeight = (y + lineH) + 'px';
   }
 
   requestAnimationFrame(tick);

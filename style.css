@@ -67,8 +67,7 @@ body {
     font-weight: 500;
     letter-spacing: -0.04em;
     line-height: 1.15;
-    z-index: 6;
-    pointer-events: none;
+    z-index: 1;
 }
 
 .statement p { margin: 0; }
@@ -78,13 +77,11 @@ body {
 /* Pretext-rendered words (when JS takes over) */
 .statement.pretext-active p { display: none; }
 
-.flow-word {
+.flow-line {
     position: absolute;
     white-space: nowrap;
     will-change: transform;
 }
-
-.flow-word.accent { color: var(--accent); }
 
 /* ─── Stamps (scattered around the face) ─── */
 .stamp-link {
