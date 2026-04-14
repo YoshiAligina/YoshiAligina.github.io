@@ -225,11 +225,11 @@ function setupH1() {
 }
 
 function setupFades() {
-  const els = [document.querySelector('.intro-header p'), document.querySelector('.caption')].filter(Boolean);
-  els.forEach((el, i) => {
+  const el = document.querySelector('.intro-header p');
+  if (el) {
     el.classList.add('text-fade');
-    el.style.setProperty('--delay', `${500 + i * 140}ms`);
-  });
+    el.style.setProperty('--delay', '500ms');
+  }
 }
 
 /* ── Drag system ─── */
