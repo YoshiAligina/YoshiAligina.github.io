@@ -12,7 +12,7 @@ const { prepareWithSegments, layoutNextLine } =
 
 /* ── Config ─────────────────────────────── */
 const C = {
-  parallax:  { intensity: 10, smooth: 0.06 },
+  parallax:  { intensity: 0, smooth: 0.06 },
   drag:      { friction: 0.92, threshold: 5, minV: 0.12 },
   magnetic:  { radius: 170, maxTilt: 1.8, smooth: 0.08 },
   reflow:    { padding: 14 },
@@ -30,11 +30,17 @@ document.addEventListener('touchmove', e => {
 }, { passive: true });
 
 /* ── Stamp state ─────────────────────────── */
-const allStamps = [...document.querySelectorAll('.stamp')];
+const allStamps = [
+  ...document.querySelectorAll('.stamp'),
+  ...document.querySelectorAll('.photo-wrap'),
+];
 const states = new Map();
 let activeDrag = null;
 
-function wrapper(stamp) { return stamp.closest('.stamp-link') || stamp; }
+function wrapper(stamp) {
+  // photo-wrap and standalone stamps wrap themselves; linked stamps return their <a>
+  return stamp.closest('.stamp-link') || stamp;
+}
 
 function readBaseRot(el) {
   const r = getComputedStyle(el).rotate;
@@ -164,7 +170,8 @@ function renderLines(container, lines, accentMap, fullText) {
    INIT & SYSTEMS
    ══════════════════════════════════════════ */
 
-let prepared, fullText, accentMap, statementEl;
+let prepared, fullText, accentMap, statementEl, editorialEl;
+const doodleStrokes = [];
 
 async function init() {
   await document.fonts.ready;
@@ -184,6 +191,7 @@ async function init() {
 
   // Pretext setup
   statementEl = document.getElementById('statement');
+  editorialEl = document.querySelector('.editorial');
   const font = getComputedStyle(statementEl).font;
   const extracted = extractText(statementEl);
   fullText = extracted.fullText;
@@ -199,6 +207,8 @@ async function init() {
   setupFades();
   // Drag system
   setupDrag();
+  // Doodle system (text reflows around freehand strokes)
+  setupDoodle();
 
   requestAnimationFrame(tick);
 }
@@ -275,6 +285,134 @@ function setupDrag() {
   });
 }
 
+/* ── Doodle system: freehand strokes become reflow obstacles ─── */
+function setupDoodle() {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'doodle-canvas';
+  editorialEl.insertBefore(canvas, editorialEl.firstChild);
+  const dctx = canvas.getContext('2d');
+  editorialEl.classList.add('doodle-cursor-area');
+
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'doodle-clear';
+  clearBtn.type = 'button';
+  clearBtn.textContent = 'clear';
+  clearBtn.setAttribute('aria-label', 'Clear doodles');
+  document.body.appendChild(clearBtn);
+
+  let currentStroke = null;
+  let isDrawing = false;
+
+  function resizeCanvas() {
+    const rect = editorialEl.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    dctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    redraw();
+  }
+
+  function redraw() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    dctx.clearRect(0, 0, w, h);
+    dctx.strokeStyle = 'rgba(194, 127, 129, 0.88)';
+    dctx.fillStyle = 'rgba(194, 127, 129, 0.88)';
+    dctx.lineWidth = 5;
+    dctx.lineCap = 'round';
+    dctx.lineJoin = 'round';
+    for (const s of doodleStrokes) {
+      if (s.length === 1) {
+        dctx.beginPath();
+        dctx.arc(s[0].x, s[0].y, 2.6, 0, Math.PI * 2);
+        dctx.fill();
+      } else if (s.length > 1) {
+        dctx.beginPath();
+        dctx.moveTo(s[0].x, s[0].y);
+        for (let i = 1; i < s.length; i++) dctx.lineTo(s[i].x, s[i].y);
+        dctx.stroke();
+      }
+    }
+  }
+
+  function isInteractive(t) { return !!(t && t.closest && t.closest('a, button, .stamp, .photo-wrap')); }
+
+  function getPoint(clientX, clientY) {
+    const r = editorialEl.getBoundingClientRect();
+    return {
+      x: clientX - r.left,
+      y: clientY - r.top,
+      inside: clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom,
+    };
+  }
+
+  function startStroke(x, y) {
+    currentStroke = [{ x, y }];
+    doodleStrokes.push(currentStroke);
+    isDrawing = true;
+    clearBtn.classList.add('visible');
+    redraw();
+  }
+  function extendStroke(x, y) {
+    if (!isDrawing || !currentStroke) return;
+    const last = currentStroke[currentStroke.length - 1];
+    if (Math.hypot(x - last.x, y - last.y) < 1.2) return;
+    currentStroke.push({ x, y });
+    redraw();
+  }
+  function endStroke() { isDrawing = false; currentStroke = null; }
+
+  function clearAll() {
+    doodleStrokes.length = 0;
+    isDrawing = false;
+    currentStroke = null;
+    clearBtn.classList.remove('visible');
+    redraw();
+  }
+
+  document.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    if (activeDrag) return;
+    if (isInteractive(e.target)) return;
+    const p = getPoint(e.clientX, e.clientY);
+    if (!p.inside) return;
+    startStroke(p.x, p.y);
+  });
+  document.addEventListener('mousemove', e => {
+    if (!isDrawing) return;
+    const p = getPoint(e.clientX, e.clientY);
+    extendStroke(p.x, p.y);
+  });
+  document.addEventListener('mouseup', () => { if (isDrawing) endStroke(); });
+
+  document.addEventListener('touchstart', e => {
+    if (activeDrag) return;
+    if (isInteractive(e.target)) return;
+    const t = e.touches[0]; if (!t) return;
+    const p = getPoint(t.clientX, t.clientY);
+    if (!p.inside) return;
+    startStroke(p.x, p.y);
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!isDrawing) return;
+    const t = e.touches[0]; if (!t) return;
+    const p = getPoint(t.clientX, t.clientY);
+    extendStroke(p.x, p.y);
+    e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchend', () => { if (isDrawing) endStroke(); });
+
+  clearBtn.addEventListener('click', clearAll);
+
+  window.addEventListener('resize', resizeCanvas);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(() => resizeCanvas()).observe(editorialEl);
+  }
+  resizeCanvas();
+}
+
 /* ── Animation loop ─── */
 function tick() {
   smooth.x = lerp(smooth.x, mouse.x, C.parallax.smooth);
@@ -333,6 +471,39 @@ function tick() {
         obstacles.push(obs);
       }
     });
+
+    // Add doodle stroke obstacles (chunk into small bbox segments so pretext
+    // carves around the freehand path, not just a giant bounding box)
+    if (editorialEl && doodleStrokes.length) {
+      const eRect = editorialEl.getBoundingClientRect();
+      const sOffX = eRect.left - cRect.left;
+      const sOffY = eRect.top - cRect.top;
+      const sPad = 6;
+      const chunk = 6;
+      for (const stroke of doodleStrokes) {
+        if (!stroke.length) continue;
+        for (let i = 0; i < stroke.length; i += chunk) {
+          const end = Math.min(i + chunk + 1, stroke.length);
+          let mnX = Infinity, mxX = -Infinity, mnY = Infinity, mxY = -Infinity;
+          for (let j = i; j < end; j++) {
+            const p = stroke[j];
+            if (p.x < mnX) mnX = p.x;
+            if (p.x > mxX) mxX = p.x;
+            if (p.y < mnY) mnY = p.y;
+            if (p.y > mxY) mxY = p.y;
+          }
+          const obs = {
+            left:   mnX + sOffX - sPad,
+            right:  mxX + sOffX + sPad,
+            top:    mnY + sOffY - sPad,
+            bottom: mxY + sOffY + sPad,
+          };
+          if (obs.bottom > 0 && obs.top < 1200 && obs.right > 0 && obs.left < containerW) {
+            obstacles.push(obs);
+          }
+        }
+      }
+    }
 
     // Lay out text line by line, adjusting width per line for obstacles
     let cursor = { segmentIndex: 0, graphemeIndex: 0 };
