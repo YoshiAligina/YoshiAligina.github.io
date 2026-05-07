@@ -207,7 +207,8 @@ body {
 .doodle-clear:hover { color: var(--ink); border-color: var(--ink); background: rgba(232, 231, 229, 0.95); }
 
 /* ─── Stamp positions: clustered around photo ─── */
-.stamp-1 { top: 25px;  left: 370px; width: 185px; rotate: -0.8deg; }
+.stamp-1-link { top: 25px;  left: 370px; width: 185px; }
+.stamp-link.stamp-1-link .stamp-1 { width: 185px; height: auto; rotate: -0.8deg; }
 .stamp-2 { top: 8px;   left: 570px; width: 140px; rotate: 0.6deg; }
 .stamp-3 { top: 190px; left: 420px; width: 170px; rotate: -0.5deg; }
 .stamp-4 { top: 15px;  right: 30px; width: 205px; rotate: 0.7deg; }
@@ -240,7 +241,8 @@ body {
 
 /* ─── Responsive ─── */
 @media (max-width: 900px) {
-    .stamp-1 { left: 280px; width: 150px; }
+    .stamp-1-link { left: 280px; width: 150px; }
+    .stamp-link.stamp-1-link .stamp-1 { width: 150px; }
     .stamp-2 { left: 440px; width: 120px; }
     .stamp-3 { left: 300px; width: 145px; }
     .stamp-4 { right: 10px; width: 165px; }
@@ -259,7 +261,8 @@ body {
     .statement { font-size: clamp(1.3rem, 5.5vw, 2rem); }
     .photo-wrap { top: 90px; left: 16px; width: 200px; }
     .stamp { width: 120px; }
-    .stamp-1 { left: 230px; width: 130px; }
+    .stamp-1-link { left: 230px; width: 130px; }
+    .stamp-link.stamp-1-link .stamp-1 { width: 130px; }
     .stamp-2 { left: 370px; width: 110px; }
     .stamp-3 { top: 160px; left: 250px; width: 120px; }
     .stamp-4 { right: 5px; width: 140px; }
@@ -278,7 +281,8 @@ body {
     .statement { font-size: clamp(1.1rem, 5vw, 1.6rem); }
     .photo-wrap { top: 80px; left: 12px; width: 160px; }
     .stamp { width: 100px; }
-    .stamp-1 { left: 190px; width: 110px; }
+    .stamp-1-link { left: 190px; width: 110px; }
+    .stamp-link.stamp-1-link .stamp-1 { width: 110px; }
     .stamp-2 { left: 310px; width: 95px; }
     .stamp-3 { top: 140px; left: 210px; width: 100px; }
     .stamp-4 { right: 0; width: 120px; }
