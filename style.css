@@ -146,6 +146,10 @@ body {
     transform: translateX(-50%) translateY(-2px);
 }
 
+/* Pull github + resume labels closer (those PNGs have empty bottom space) */
+.stamp-link.stamp-1-link .stamp-hover-label { bottom: 12px; }
+.stamp-link.stamp-9-link .stamp-hover-label { bottom: 28px; }
+
 .stamp-link:hover, .stamp-link:focus-visible { z-index: 12; }
 
 .stamp {
