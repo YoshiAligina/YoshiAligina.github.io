@@ -171,40 +171,6 @@ body {
 .stamp.stamp-grabbed { filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32)); scale: 1.04; z-index: 20; }
 .stamp-grabbed .stamp { filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.32)); scale: 1.04; }
 
-/* ─── Doodle layer (text reflows around your strokes) ─── */
-.doodle-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 3;
-}
-
-.doodle-cursor-area { cursor: crosshair; }
-
-.doodle-clear {
-    position: fixed;
-    bottom: 18px;
-    right: 18px;
-    background: rgba(232, 231, 229, 0.78);
-    border: 1px solid #c3c1be;
-    color: var(--muted);
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 0.98rem;
-    padding: 6px 16px;
-    border-radius: 999px;
-    cursor: pointer;
-    z-index: 30;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 320ms ease, transform 320ms ease, color 200ms ease, border-color 200ms ease, background 200ms ease;
-    pointer-events: none;
-}
-.doodle-clear.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.doodle-clear:hover { color: var(--ink); border-color: var(--ink); background: rgba(232, 231, 229, 0.95); }
 
 /* ─── Stamp positions: clustered around photo ─── */
 .stamp-1-link { top: 25px;  left: 370px; width: 185px; }
